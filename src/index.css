@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   --font-body: 'Plus Jakarta Sans', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-serif: 'Noto Serif Devanagari', Georgia, serif;

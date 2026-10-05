@@ -3,6 +3,7 @@ import KpiCard from '../../components/KpiCard';
 import GISMap from '../../components/GISMap';
 import { INITIAL_GAUSHALAS } from '../../data/portalData';
 import { MapPin, TrendingDown, ShieldAlert, Award, FileSearch, CheckCircle, Search, ExternalLink } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function AdminDashboard({
   gaushalas,
@@ -11,6 +12,9 @@ export default function AdminDashboard({
   onOpenGrantModal,
   onNavigateTab
 }) {
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
+
   const [selectedId, setSelectedId] = useState('RPR-01');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -27,15 +31,15 @@ export default function AdminDashboard({
       {/* Header Banner */}
       <div className="page-header-banner">
         <div>
-          <h2 className="page-title">राज्य स्तरीय निगरानी डैशबोर्ड (State Command Center)</h2>
-          <p className="page-desc">पूरे राज्य की गौशालाओं की वास्तविक समय (GIS Map) AI + RFID निगरानी</p>
+          <h2 className="page-title">{isHi ? 'राज्य स्तरीय निगरानी डैशबोर्ड (State Command Center)' : 'State Level Command Center'}</h2>
+          <p className="page-desc">{isHi ? 'पूरे राज्य की गौशालाओं की वास्तविक समय (GIS Map) AI + RFID निगरानी' : 'Real-time AI + RFID monitoring of Gaushalas across the state via GIS'}</p>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <button className="btn-gov saffron" onClick={() => onNavigateTab('grants')}>
-            💰 अनुदान सत्यापन (DBT)
+            💰 {isHi ? 'अनुदान सत्यापन (DBT)' : 'Grant Verification (DBT)'}
           </button>
           <button className="btn-gov outline" onClick={() => onNavigateTab('audit')}>
-            🔍 AI ऑडिट
+            🔍 {isHi ? 'AI ऑडिट' : 'AI Audit'}
           </button>
         </div>
       </div>
@@ -45,51 +49,65 @@ export default function AdminDashboard({
         <div>
           <div className="live-pulse-badge">
             <span className="pulsing-dot" />
-            <span>लाइव मॉनिटरिंग · 1,248 गौशालाएँ ऑनलाइन</span>
+            <span>{isHi ? 'लाइव मॉनिटरिंग · 1,248 गौशालाएँ ऑनलाइन' : 'Live Monitoring · 1,248 Gaushalas Online'}</span>
           </div>
           <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.45rem', fontWeight: 700, margin: '6px 0 2px' }}>
-            आज का राज्य स्तरीय गो-संरक्षण अनुपालन: <span style={{ color: '#4ade80' }}>94.1%</span>
+            {isHi ? 'आज का राज्य स्तरीय गो-संरक्षण अनुपालन:' : 'Today\'s State-level Protection Compliance:'} <span style={{ color: '#4ade80' }}>94.1%</span>
           </div>
           <p style={{ fontSize: '0.8rem', opacity: 0.85, margin: 0 }}>
-            Edge-AI CCTV + UHF RFID स्वचालित हेडकाउंट द्वारा दैनिक सत्यापन सक्रिय
+            {isHi ? 'Edge-AI CCTV + UHF RFID स्वचालित हेडकाउंट द्वारा दैनिक सत्यापन सक्रिय' : 'Daily verification active via Edge-AI CCTV + UHF RFID Automated Headcount'}
           </p>
         </div>
         <div style={{ textAlign: 'right', background: 'rgba(0,0,0,0.25)', padding: '10px 16px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.1)' }}>
-          <div style={{ fontSize: '0.72rem', color: '#cbd5e1' }}>सत्यापित देय अनुदान (दैनिक हेडकाउंट आधार)</div>
+          <div style={{ fontSize: '0.72rem', color: '#cbd5e1' }}>{isHi ? 'सत्यापित देय अनुदान (दैनिक हेडकाउंट आधार)' : 'Verified Payable Grant (Daily Headcount Basis)'}</div>
           <b style={{ fontFamily: 'var(--font-serif)', fontSize: '1.6rem', color: '#fb923c' }}>₹ 74.56 Lakh</b>
-          <div style={{ fontSize: '0.68rem', color: '#4ade80' }}>✓ पारदर्शी DBT अनुदान व्यवस्था</div>
+          <div style={{ fontSize: '0.68rem', color: '#4ade80' }}>{isHi ? '✓ पारदर्शी DBT अनुदान व्यवस्था' : '✓ Transparent DBT Grant System'}</div>
         </div>
       </div>
 
       {/* KPI Cards Grid */}
-      <div className="kpi-grid">
+      <div className="kpi-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))' }}>
         <KpiCard
-          title="पंजीकृत गौशालाएँ (Total Units)"
+          title={isHi ? 'पंजीकृत गौशालाएँ' : 'Registered Gaushalas'}
           value="1,248"
-          change="▲ 12 इस माह जोड़ी गईं"
+          change={isHi ? '▲ 12 इस माह' : '▲ 12 this month'}
           tone="blue"
           icon="🏛️"
         />
         <KpiCard
-          title="AI सत्यापित गोवंश (Verified Cattle)"
+          title={isHi ? 'सत्यापित गोवंश' : 'Verified Cattle'}
           value="1,86,420"
-          change="▲ 97.4% प्रत्यक्ष सत्यापन"
+          change={isHi ? '▲ 97.4% सत्यापन' : '▲ 97.4% verified'}
           tone="emerald"
           icon="🐄"
         />
         <KpiCard
-          title="स्वीकृत DBT अनुदान (तिमाही)"
+          title={isHi ? 'अनुदान (DBT)' : 'Grants (DBT)'}
           value="₹ 1.86 Cr"
-          change="सत्यापित गोवंश अनुपात"
+          change={isHi ? 'सत्यापित आधार' : 'Verified Basis'}
           tone="saffron"
           icon="💰"
         />
         <KpiCard
-          title="राज्य औसत मृत्यु दर (Mortality)"
+          title={isHi ? 'मृत्यु दर' : 'Mortality Rate'}
           value="2.1%"
-          change="▼ 1.4% AI अर्ली-अलर्ट से घटी"
+          change={isHi ? '▼ 1.4% कमी' : '▼ 1.4% decrease'}
           tone="emerald"
           icon="📉"
+        />
+        <KpiCard
+          title={isHi ? 'जियोफेंस अलर्ट' : 'Geofence Alerts'}
+          value="43"
+          change={isHi ? 'गाय सीमा से बाहर' : 'Cows out of bound'}
+          tone="red"
+          icon="🚧"
+        />
+        <KpiCard
+          title={isHi ? 'चारा विलंब' : 'Fodder Delay'}
+          value="18"
+          change={isHi ? 'नांद खाली (अलर्ट)' : 'Trough Empty'}
+          tone="saffron"
+          icon="🌾"
         />
       </div>
 
@@ -206,8 +224,35 @@ export default function AdminDashboard({
         </div>
       </div>
 
-      {/* Analytics Charts (Mortality SVG + Grant Distribution) */}
+      {/* Analytics Charts (Mortality SVG + Grant Distribution) & New Feed Stock/Requests */}
       <div className="grid-2col">
+        {/* Feed Stock Summary */}
+        <div className="dash-card">
+          <div className="card-title-row">
+            <h3>
+              <Award size={18} color="var(--emerald)" />
+              {isHi ? 'राज्यव्यापी चारा स्टॉक व अनुरोध (Feed & Requests)' : 'Statewide Feed Stock & Requests'}
+            </h3>
+            <span className="status-badge warn">{isHi ? '14 अनुरोध लंबित' : '14 Pending Requests'}</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div className="stock-bar-row">
+              <span style={{ fontSize: '0.85rem' }}>{isHi ? 'हरा चारा स्टॉक (कुल)' : 'Green Fodder Stock (Total)'}</span>
+              <b style={{ color: 'var(--emerald)' }}>14,500 {isHi ? 'टन' : 'Tonnes'}</b>
+            </div>
+            <div className="stock-bar-row">
+              <span style={{ fontSize: '0.85rem' }}>{isHi ? 'सूखा चारा स्टॉक (कुल)' : 'Dry Fodder Stock (Total)'}</span>
+              <b style={{ color: 'var(--saffron)' }}>8,200 {isHi ? 'टन' : 'Tonnes'}</b>
+            </div>
+            <div className="stock-bar-row" style={{ marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--border-color)' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{isHi ? 'लंबित मांग (Pending Requests)' : 'Pending Demands'}</span>
+              <button className="btn-gov outline btn-sm" onClick={() => onNavigateTab('grants')}>
+                {isHi ? 'समीक्षा करें' : 'Review'}
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* Mortality Trend Chart */}
         <div className="dash-card">
           <div className="card-title-row">

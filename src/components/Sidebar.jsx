@@ -16,50 +16,56 @@ import {
   Wheat,
   Stethoscope,
   ShieldAlert,
-  Cpu
+  Cpu,
+  Bot
 } from 'lucide-react';
-
-const ROLE_METADATA = {
-  admin: {
-    title: "राज्य नियंत्रक (Super Admin)",
-    subtitle: "सचिव, राज्य गो-सेवा आयोग",
-    avatar: "👑",
-    nav: [
-      { id: "dash", label: "राज्य डैशबोर्ड", icon: LayoutDashboard },
-      { id: "grants", label: "अनुदान स्वीकृति (DBT)", icon: Coins },
-      { id: "audit", label: "AI ऑडिट रिपोर्ट", icon: ShieldCheck },
-      { id: "sub", label: "उप-प्रशासक प्रबंधन", icon: Users },
-      { id: "policy", label: "नीति एवं मानक", icon: ScrollText },
-      { id: "pub", label: "सार्वजनिक गोवंश निरीक्षण", icon: Eye },
-    ]
-  },
-  sub: {
-    title: "उप-प्रशासक (Zone/District)",
-    subtitle: "जिला नोडल अधिकारी, रायपुर ज़ोन",
-    avatar: "🧑‍💼",
-    nav: [
-      { id: "zone", label: "ज़ोन लाइव मॉनिटर", icon: Radio },
-      { id: "alerts", label: "अलर्ट एवं निरीक्षण", icon: AlertTriangle },
-      { id: "verify", label: "रिपोर्ट सत्यापन", icon: FileCheck },
-      { id: "zrep", label: "ज़ोन रिपोर्ट", icon: BarChart3 },
-    ]
-  },
-  mgr: {
-    title: "गौशाला प्रबंधक",
-    subtitle: "श्री कृष्ण गौशाला, आरंग",
-    avatar: "🐄",
-    nav: [
-      { id: "mdash", label: "मेरी गौशाला", icon: Home },
-      { id: "cctv", label: "CCTV · AI डिटेक्शन", icon: Camera },
-      { id: "gate", label: "RFID गेट एवं ट्रैकिंग", icon: Tag },
-      { id: "feed", label: "चारा एवं स्टॉक", icon: Wheat },
-      { id: "health", label: "स्वास्थ्य एवं चिकित्सा", icon: Stethoscope },
-      { id: "perim", label: "सुरक्षा / घुसपैठ", icon: ShieldAlert },
-    ]
-  }
-};
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Sidebar({ role, activeTab, onTabSelect }) {
+  const { language } = useLanguage();
+  const isHi = language === 'hi';
+
+  const ROLE_METADATA = {
+    admin: {
+      title: isHi ? "राज्य नियंत्रक (Super Admin)" : "State Controller (Admin)",
+      subtitle: isHi ? "सचिव, राज्य गो-सेवा आयोग" : "Secretary, State Commission",
+      avatar: "👑",
+      nav: [
+        { id: "dash", label: isHi ? "राज्य डैशबोर्ड" : "State Dashboard", icon: LayoutDashboard },
+        { id: "grants", label: isHi ? "अनुदान स्वीकृति (DBT)" : "Grant Approvals (DBT)", icon: Coins },
+        { id: "audit", label: isHi ? "AI ऑडिट रिपोर्ट" : "AI Audit Reports", icon: ShieldCheck },
+        { id: "sub", label: isHi ? "उप-प्रशासक प्रबंधन" : "Sub-Admin Management", icon: Users },
+        { id: "policy", label: isHi ? "नीति एवं मानक" : "Policy & Standards", icon: ScrollText },
+        { id: "ai", label: isHi ? "भविष्य की तकनीकें (AI)" : "Advanced Tech (AI)", icon: Bot },
+        { id: "pub", label: isHi ? "सार्वजनिक निरीक्षण" : "Public Inspection", icon: Eye },
+      ]
+    },
+    sub: {
+      title: isHi ? "उप-प्रशासक (Zone/District)" : "Sub-Admin (Zone/District)",
+      subtitle: isHi ? "जिला नोडल अधिकारी, रायपुर" : "District Nodal Officer, Raipur",
+      avatar: "🧑‍💼",
+      nav: [
+        { id: "zone", label: isHi ? "ज़ोन लाइव मॉनिटर" : "Zone Live Monitor", icon: Radio },
+        { id: "alerts", label: isHi ? "अलर्ट एवं निरीक्षण" : "Alerts & Inspections", icon: AlertTriangle },
+        { id: "verify", label: isHi ? "रिपोर्ट सत्यापन" : "Report Verification", icon: FileCheck },
+        { id: "zrep", label: isHi ? "ज़ोन रिपोर्ट" : "Zone Reports", icon: BarChart3 },
+      ]
+    },
+    mgr: {
+      title: isHi ? "गौशाला प्रबंधक" : "Gaushala Manager",
+      subtitle: isHi ? "श्री कृष्ण गौशाला, आरंग" : "Shri Krishna Gaushala, Arang",
+      avatar: "🐄",
+      nav: [
+        { id: "mdash", label: isHi ? "मेरी गौशाला" : "My Gaushala", icon: Home },
+        { id: "cctv", label: isHi ? "CCTV · AI डिटेक्शन" : "CCTV · AI Detection", icon: Camera },
+        { id: "gate", label: isHi ? "RFID गेट ट्रैकिंग" : "RFID Gate Tracking", icon: Tag },
+        { id: "feed", label: isHi ? "चारा एवं स्टॉक" : "Fodder & Stock", icon: Wheat },
+        { id: "health", label: isHi ? "स्वास्थ्य एवं चिकित्सा" : "Health & Medical", icon: Stethoscope },
+        { id: "perim", label: isHi ? "सुरक्षा / घुसपैठ" : "Security / Perimeter", icon: ShieldAlert },
+      ]
+    }
+  };
+
   const currentRole = ROLE_METADATA[role] || ROLE_METADATA.admin;
 
   return (

@@ -2,8 +2,10 @@ import React from 'react';
 import { FileCheck, Camera, CheckCircle, Coins } from 'lucide-react';
 import KpiCard from '../../components/KpiCard';
 import { playSuccessSound } from '../../sound';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function SubVerification({ gaushalas, onOpenPhotoModal, onShowToast }) {
+  const { t } = useLanguage();
   const zoneGaushalas = gaushalas.filter((g) => g.zone === 'रायपुर ज़ोन');
 
   const totalClaimed = zoneGaushalas.reduce((acc, g) => acc + (g.reg * 40 * 75), 0);
@@ -19,35 +21,30 @@ export default function SubVerification({ gaushalas, onOpenPhotoModal, onShowToa
     <div>
       <div className="page-header-banner">
         <div>
-          <h2 className="page-title">दैनिक रिपोर्ट एवं अनुदान संस्तुति सत्यापन (Zonal Verification Queue)</h2>
-          <p className="page-desc">
-            गौशालाओं की दैनिक हेडकाउंट रिपोर्ट का फोटो-प्रमाण सहित सत्यापन एवं राज्य स्तरीय DBT अनुदान संस्तुति
-          </p>
+          <h2 className="page-title">{t('verifyTitle')}</h2>
+          <p className="page-desc">{t('verifyDesc')}</p>
         </div>
       </div>
 
       {/* Zonal Grant KPIs */}
       <div className="kpi-grid">
         <KpiCard
-          title="ज़ोन दावाकृत अनुदान"
+          title={t('zoneClaimed')}
           value={`₹ ${(totalClaimed / 100000).toFixed(2)} L`}
           tone="blue"
           icon="📋"
-          subtitle="486 पंजीकृत गोवंश आधार"
         />
         <KpiCard
-          title="सत्यापित अनुशंसित अनुदान"
+          title={t('zoneVerified')}
           value={`₹ ${(totalVerified / 100000).toFixed(2)} L`}
           tone="emerald"
           icon="💰"
-          subtitle="419 AI सत्यापित गोवंश (@ ₹40/दिन)"
         />
         <KpiCard
-          title="रोकी गई संस्तुति (विचलन)"
+          title={t('zoneHeld')}
           value={`₹ ${(totalHeld / 100000).toFixed(2)} L`}
           tone="saffron"
           icon="🛡️"
-          subtitle="67 असत्यापित गोवंश अंतर"
         />
       </div>
 
@@ -55,26 +52,23 @@ export default function SubVerification({ gaushalas, onOpenPhotoModal, onShowToa
         <div className="card-title-row">
           <h3>
             <FileCheck size={18} color="var(--emerald)" />
-            दैनिक AI उपस्थिति एवं अनुदान सत्यापन (रायपुर संभाग)
+            {t('verifyTitle')}
           </h3>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-            मानक दर: ₹40 प्रति गाय / प्रतिदिन × 75 दिन
-          </span>
         </div>
 
         <div className="table-responsive">
           <table className="gov-table">
             <thead>
               <tr>
-                <th>गौशाला कोड</th>
-                <th>गौशाला का नाम</th>
-                <th>पंजीकृत गोवंश</th>
-                <th>AI सत्यापित</th>
-                <th>उपस्थिति दर</th>
-                <th>अनुशंसित DBT अनुदान</th>
-                <th>चारा स्थिति</th>
-                <th>CCTV फोटो-प्रमाण</th>
-                <th>नोडल सत्यापन</th>
+                <th>{t('tableGaushalaCode')}</th>
+                <th>{t('tableName')}</th>
+                <th>{t('tableReg')}</th>
+                <th>{t('tableVer')}</th>
+                <th>{t('tableRate')}</th>
+                <th>{t('tableGrant')}</th>
+                <th>{t('tableFeed')}</th>
+                <th>{t('tablePhoto')}</th>
+                <th>{t('tableAction')}</th>
               </tr>
             </thead>
             <tbody>
@@ -106,7 +100,7 @@ export default function SubVerification({ gaushalas, onOpenPhotoModal, onShowToa
                         onClick={() => onOpenPhotoModal({ name: g.name, id: g.id })}
                       >
                         <Camera size={14} />
-                        📷 फोटो-प्रमाण
+                        📷 {t('btnPhoto')}
                       </button>
                     </td>
                     <td>
@@ -115,7 +109,7 @@ export default function SubVerification({ gaushalas, onOpenPhotoModal, onShowToa
                         onClick={() => handleVerifyReport(g)}
                       >
                         <CheckCircle size={14} />
-                        अनुदान संस्तुत करें
+                        {t('btnVerify')}
                       </button>
                     </td>
                   </tr>

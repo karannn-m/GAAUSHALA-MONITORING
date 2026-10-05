@@ -9,6 +9,7 @@ import AdminAudit from './views/admin/AdminAudit';
 import AdminSubAdmins from './views/admin/AdminSubAdmins';
 import AdminPolicy from './views/admin/AdminPolicy';
 import AdminPublic from './views/admin/AdminPublic';
+import AdvancedFeatures from './views/admin/AdvancedFeatures';
 
 // Sub-Admin Views
 import SubZoneMonitor from './views/sub/SubZoneMonitor';
@@ -30,6 +31,7 @@ import PhotoProofModal from './components/Modals/PhotoProofModal';
 import AuditReportModal from './components/Modals/AuditReportModal';
 import AddHealthModal from './components/Modals/AddHealthModal';
 import AddSubAdminModal from './components/Modals/AddSubAdminModal';
+import AddCowModal from './components/Modals/AddCowModal';
 
 // Data & Sound
 import {
@@ -86,6 +88,7 @@ export default function App() {
   const [adoptionCow, setAdoptionCow] = useState(null);
   const [addHealthModalOpen, setAddHealthModalOpen] = useState(false);
   const [addSubAdminModalOpen, setAddSubAdminModalOpen] = useState(false);
+  const [addCowModalOpen, setAddCowModalOpen] = useState(false);
 
   // Default tab switcher per role
   const handleRoleChange = (newRole) => {
@@ -227,6 +230,9 @@ export default function App() {
               onShowToast={showToast}
             />
           )}
+          {role === 'admin' && activeTab === 'ai' && (
+            <AdvancedFeatures onShowToast={showToast} />
+          )}
 
           {/* Sub-Admin Views */}
           {role === 'sub' && activeTab === 'zone' && (
@@ -266,6 +272,7 @@ export default function App() {
               alerts={alerts}
               stock={stock}
               onNavigateTab={(tab) => setActiveTab(tab)}
+              onOpenAddCowModal={() => setAddCowModalOpen(true)}
             />
           )}
           {role === 'mgr' && activeTab === 'cctv' && (
@@ -342,6 +349,17 @@ export default function App() {
           onAddOfficer={(officer) => {
             setSubAdmins((prev) => [...prev, officer]);
             showToast(`✓ नया उप-प्रशासक असाइन किया गया: ${officer.name} (${officer.zone})`);
+          }}
+        />
+      )}
+
+      {addCowModalOpen && (
+        <AddCowModal
+          onClose={() => setAddCowModalOpen(false)}
+          onAddCow={(cow) => {
+            // Updating the first gaushala's count to simulate system update
+            setGaushalas(prev => prev.map((g, i) => i === 0 ? { ...g, reg: g.reg + 1, ver: g.ver + 1 } : g));
+            showToast(`✓ नया गोवंश (${cow.tag}) गौशाला में सफलतापूर्वक पंजीकृत किया गया। सिस्टम अपडेटेड!`);
           }}
         />
       )}

@@ -71,6 +71,42 @@ export default function SubZoneMonitor({ gaushalas, onOpenPhotoModal, onShowToas
         />
       </div>
 
+      {/* Feed Stock / Requests & Geofence (Cow Outside Zone) Map */}
+      <div className="grid-2col">
+        <div className="dash-card">
+          <div className="card-title-row">
+            <h3>🚧 जियोफेंस अलर्ट (Cow Outside Zone)</h3>
+            <span className="live-pulse-badge">लाइव ट्रैकिंग</span>
+          </div>
+          <div style={{ background: 'var(--navy-surface)', height: 200, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', flexDirection: 'column' }}>
+            <span style={{ fontSize: '2rem' }}>🗺️</span>
+            <span style={{ marginTop: 8, fontSize: '0.85rem' }}>GPS + LoRaWAN सक्रिय नक्शा</span>
+            <div style={{ marginTop: 12, fontSize: '0.75rem', background: 'rgba(255,0,0,0.2)', padding: '4px 10px', borderRadius: 4, border: '1px solid #ef4444' }}>
+              🚨 गाय #2290 सीमा से 5km बाहर (तिल्दा)
+            </div>
+          </div>
+        </div>
+
+        <div className="dash-card">
+          <div className="card-title-row">
+            <h3>🌾 चारा स्टॉक एवं अनुरोध कतार (Request Queue)</h3>
+            <span className="status-badge warn">2 लंबित</span>
+          </div>
+          <div className="alert-feed-list">
+            <div className="alert-feed-item warning">
+              <div className="alert-feed-title">तिल्दा गौशाला - हरा चारा कमी (30% से नीचे)</div>
+              <div className="alert-feed-meta">200 kg तत्काल आवश्यकता • अनुरोधकर्ता: राम कुमार (मैनेजर)</div>
+              <button className="btn-gov emerald btn-sm" style={{ marginTop: 8 }} onClick={() => onShowToast('आपूर्ति स्वीकृत')}>स्वीकृत करें</button>
+            </div>
+            <div className="alert-feed-item info">
+              <div className="alert-feed-title">अभनपुर गौशाला - सूखा चारा अनुरोध</div>
+              <div className="alert-feed-meta">नियमित साप्ताहिक मांग • समीक्षाधीन</div>
+              <button className="btn-gov outline btn-sm" style={{ marginTop: 8 }}>विवरण देखें</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Live Camera Feeds per Gaushala */}
       <div className="grid-2col">
         {zoneGaushalas.map((g) => (
@@ -82,9 +118,14 @@ export default function SubZoneMonitor({ gaushalas, onOpenPhotoModal, onShowToas
                   कोड: {g.id} • AI गणना: <b style={{ color: 'var(--emerald)' }}>{g.ver}</b> / {g.reg}
                 </div>
               </div>
-              <span className={`status-badge ${g.status}`}>
-                {g.status === 'ok' ? 'सामान्य ✓' : g.status === 'warn' ? 'चेतावनी' : 'गंभीर अंतर'}
-              </span>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <button className="btn-gov saffron btn-sm" onClick={() => onShowToast(`📞 कॉलिंग ${g.name} कंट्रोल रूम...`)}>
+                  📞 कॉल गौशाला
+                </button>
+                <span className={`status-badge ${g.status}`}>
+                  {g.status === 'ok' ? 'सामान्य ✓' : g.status === 'warn' ? 'चेतावनी' : 'गंभीर अंतर'}
+                </span>
+              </div>
             </div>
 
             <LiveCameraFeed

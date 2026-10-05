@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, Moon, Sun, Volume2, VolumeX, Shield, Clock, ExternalLink } from 'lucide-react';
+import { Bell, Moon, Sun, Volume2, VolumeX, Shield, Clock, ExternalLink, Globe } from 'lucide-react';
 import { playNotificationSound } from '../sound';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Header({
   role,
@@ -15,6 +16,8 @@ export default function Header({
   const [time, setTime] = useState(new Date());
   const [showNotifDrawer, setShowNotifDrawer] = useState(false);
   const [unreadCount, setUnreadCount] = useState(alerts.length);
+
+  const { language, toggleLanguage, t } = useLanguage();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -60,7 +63,7 @@ export default function Header({
             title="State Super Administrator"
           >
             <span>👑</span>
-            <span>राज्य नियंत्रक (Admin)</span>
+            <span>{t('admin')}</span>
           </button>
           <button
             className={`role-btn ${role === 'sub' ? 'active' : ''}`}
@@ -68,7 +71,7 @@ export default function Header({
             title="District / Zonal Officer"
           >
             <span>🧑‍💼</span>
-            <span>उप-प्रशासक (Zonal)</span>
+            <span>{t('sub')}</span>
           </button>
           <button
             className={`role-btn ${role === 'mgr' ? 'active' : ''}`}
@@ -76,7 +79,7 @@ export default function Header({
             title="Gaushala Ground Manager"
           >
             <span>🐄</span>
-            <span>गौशाला प्रबंधक (Manager)</span>
+            <span>{t('mgr')}</span>
           </button>
         </div>
 
@@ -107,6 +110,16 @@ export default function Header({
           >
             <Bell size={18} />
             {unreadCount > 0 && <span className="badge-counter">{unreadCount}</span>}
+          </button>
+
+          {/* Language Switcher */}
+          <button
+            className="icon-action-btn"
+            onClick={toggleLanguage}
+            title={language === 'hi' ? "Switch to English" : "हिंदी में बदलें"}
+            style={{ fontWeight: 'bold', fontSize: '0.85rem' }}
+          >
+            {language === 'hi' ? 'EN' : 'HI'}
           </button>
 
           {/* Theme Switcher */}

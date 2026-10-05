@@ -1,8 +1,10 @@
 import React from 'react';
-import { BarChart3, Send, CheckCircle2, TrendingUp } from 'lucide-react';
+import { BarChart3, Send, CheckCircle2, TrendingUp, Download } from 'lucide-react';
 import { playSuccessSound } from '../../sound';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function SubZoneReports({ onShowToast }) {
+  const { t } = useLanguage();
   const days = [
     { day: 'सोमवार', rate: 84, verified: 412, total: 486 },
     { day: 'मंगलवार', rate: 86, verified: 418, total: 486 },
@@ -19,18 +21,20 @@ export default function SubZoneReports({ onShowToast }) {
   };
 
   return (
-    <div>
-      <div className="page-header-banner">
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
         <div>
-          <h2 className="page-title">ज़ोन साप्ताहिक प्रदर्शन रिपोर्ट (Weekly Performance)</h2>
-          <p className="page-desc">
-            रायपुर ज़ोन की सभी 3 गौशालाओं का 7-दिवसीय AI सत्यापन औसत एवं चारा वितरण विश्लेषण
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{t('reportTitle')}</h2>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">
+            {t('reportDesc')}
           </p>
         </div>
-        <button className="btn-gov saffron" onClick={handleSendReport}>
-          <Send size={16} />
-          राज्य कार्यालय को रिपोर्ट भेजें
-        </button>
+        <div className="flex gap-3 mt-4 md:mt-0">
+          <button className="flex items-center gap-2 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors font-medium shadow-sm" onClick={handleSendReport}>
+            <Send size={16} />
+            {t('exportReport')}
+          </button>
+        </div>
       </div>
 
       <div className="grid-2col">
@@ -68,15 +72,15 @@ export default function SubZoneReports({ onShowToast }) {
         </div>
 
         {/* Zone Audit Summary */}
-        <div className="dash-card">
-          <div className="card-title-row">
-            <h3>
-              <TrendingUp size={18} color="var(--emerald)" />
-              ज़ोन स्तरीय मुख्य उपलब्धियाँ
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+          <div className="flex items-center gap-2 border-b border-gray-100 dark:border-gray-700 pb-3 mb-4">
+            <TrendingUp size={18} className="text-emerald-500" />
+            <h3 className="font-semibold text-lg text-gray-800 dark:text-gray-100">
+              ज़ोन स्तरीय मुख्य उपलब्धियाँ (Zone Highlights)
             </h3>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: '0.84rem' }}>
+          <div className="flex flex-col gap-4 text-sm">
             <div style={{ background: 'var(--badge-bg)', padding: 12, borderRadius: 8 }}>
               <b style={{ color: 'var(--emerald)' }}>✓ शत-प्रतिशत RFID टैग स्कैनिंग</b>
               <p style={{ color: 'var(--text-secondary)', margin: '4px 0 0' }}>
