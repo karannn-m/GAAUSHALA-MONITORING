@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Wheat, Truck, PlusCircle, MinusCircle, CheckCircle2, Scale } from 'lucide-react';
 import { playSuccessSound } from '../../sound';
 import { WEIGHBRIDGE_LOGS } from '../../data/portalData';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function ManagerFeedStock({
   stock,
@@ -9,6 +10,7 @@ export default function ManagerFeedStock({
   onAddStock,
   onShowToast
 }) {
+  const { isHi } = useLanguage();
   const [cowCount, setCowCount] = useState(204);
 
   const greenPerCow = 15;
@@ -20,9 +22,9 @@ export default function ManagerFeedStock({
   const totalFeed = (cowCount * feedPerCow).toFixed(1);
 
   const meta = [
-    { key: 'hara', label: 'हरा चारा (नेपियर)', max: 8000, val: stock.hara },
-    { key: 'sukha', label: 'सूखा चारा (पैरा)', max: 3000, val: stock.sukha },
-    { key: 'dana', label: 'संतुलित दाना', max: 600, val: stock.dana },
+    { key: 'hara', label: isHi ? 'हरा चारा (नेपियर)' : 'Green Fodder (Napier)', max: 8000, val: stock.hara },
+    { key: 'sukha', label: isHi ? 'सूखा चारा (पैरा)' : 'Dry Fodder (Straw)', max: 3000, val: stock.sukha },
+    { key: 'dana', label: isHi ? 'संतुलित दाना' : 'Concentrate Feed', max: 600, val: stock.dana },
   ];
 
   const handleDeduct = () => {
@@ -32,16 +34,24 @@ export default function ManagerFeedStock({
   const handleAddTruckStock = () => {
     onAddStock('hara', 3240);
     playSuccessSound();
-    onShowToast('✓ धर्मकाँटा तौल पर्ची अनुसार 3,240 kg हरा चारा डिजिटल स्टॉक में जोड़ा गया');
+    onShowToast(
+      isHi
+        ? '✓ धर्मकाँटा तौल पर्ची अनुसार 3,240 kg हरा चारा डिजिटल स्टॉक में जोड़ा गया'
+        : '✓ 3,240 kg green fodder added to digital inventory per weighbridge receipt'
+    );
   };
 
   return (
     <div>
       <div className="page-header-banner">
         <div>
-          <h2 className="page-title">चारा एवं डिजिटल स्टॉक प्रबंधन (Ration & Weighbridge)</h2>
+          <h2 className="page-title">
+            {isHi ? 'चारा एवं डिजिटल स्टॉक प्रबंधन (Ration & Weighbridge)' : 'Fodder & Digital Stock Management'}
+          </h2>
           <p className="page-desc">
-            AI सत्यापित गोवंश संख्या से जुड़ी पारदर्शी राशन व्यवस्था + धर्मकाँटा एवं ANPR वाहन मिलान
+            {isHi
+              ? 'AI सत्यापित गोवंश संख्या से जुड़ी पारदर्शी राशन व्यवस्था + धर्मकाँटा एवं ANPR वाहन मिलान'
+              : 'Transparent ration system linked to AI verified cattle count + Smart Weighbridge & ANPR verification'}
           </p>
         </div>
       </div>
@@ -52,13 +62,17 @@ export default function ManagerFeedStock({
           <div className="card-title-row">
             <h3>
               <Scale size={18} color="var(--emerald)" />
-              AI राशन कैलकुलेटर (Ration Engine)
+              {isHi ? 'AI राशन कैलकुलेटर (Ration Engine)' : 'AI Ration Calculator (Ration Engine)'}
             </h3>
-            <span className="status-badge ok">मानक: 15 + 5 + 1.5 kg</span>
+            <span className="status-badge ok">
+              {isHi ? 'मानक: 15 + 5 + 1.5 kg' : 'Norm: 15 + 5 + 1.5 kg'}
+            </span>
           </div>
 
           <div className="form-group">
-            <label className="form-label">आज की सत्यापित गायों की संख्या</label>
+            <label className="form-label">
+              {isHi ? 'आज की सत्यापित गायों की संख्या' : 'Today\'s Verified Cattle Count'}
+            </label>
             <input
               type="number"
               className="form-input"
@@ -70,22 +84,30 @@ export default function ManagerFeedStock({
           {/* Breakdown cards */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, margin: '14px 0' }}>
             <div style={{ background: 'var(--badge-bg)', padding: 12, borderRadius: 8, textAlign: 'center' }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>हरा चारा</div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                {isHi ? 'हरा चारा' : 'Green Fodder'}
+              </div>
               <b style={{ fontSize: '1.15rem', color: 'var(--emerald)' }}>{totalGreen} kg</b>
             </div>
             <div style={{ background: 'var(--badge-bg)', padding: 12, borderRadius: 8, textAlign: 'center' }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>सूखा चारा</div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                {isHi ? 'सूखा चारा' : 'Dry Fodder'}
+              </div>
               <b style={{ fontSize: '1.15rem', color: 'var(--amber-warn)' }}>{totalDry} kg</b>
             </div>
             <div style={{ background: 'var(--badge-bg)', padding: 12, borderRadius: 8, textAlign: 'center' }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>दाना</div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                {isHi ? 'दाना' : 'Concentrate'}
+              </div>
               <b style={{ fontSize: '1.15rem', color: 'var(--saffron)' }}>{totalFeed} kg</b>
             </div>
           </div>
 
           <button className="btn-gov emerald" onClick={handleDeduct} style={{ width: '100%', justifyContent: 'center' }}>
             <MinusCircle size={16} />
-            {cowCount} गायों के राशन की गोदाम स्टॉक से स्वतः कटौती करें
+            {isHi
+              ? `${cowCount} गायों के राशन की गोदाम स्टॉक से स्वतः कटौती करें`
+              : `Auto-deduct ration for ${cowCount} cattle from godown stock`}
           </button>
         </div>
 
@@ -94,7 +116,7 @@ export default function ManagerFeedStock({
           <div className="card-title-row">
             <h3>
               <Wheat size={18} color="var(--saffron)" />
-              गोदाम का डिजिटल स्टॉक (Current Inventory)
+              {isHi ? 'गोदाम का डिजिटल स्टॉक (Current Inventory)' : 'Godown Digital Stock (Current Inventory)'}
             </h3>
           </div>
 
@@ -126,7 +148,10 @@ export default function ManagerFeedStock({
           </div>
 
           <div style={{ background: 'var(--badge-bg)', padding: 12, borderRadius: 8, marginTop: 20, fontSize: '0.78rem' }}>
-            💡 <b>स्टॉक चेतावनी नियम:</b> 30% से कम होने पर नोडल अधिकारी एवं चारा आपूर्तिकर्ता को स्वचालित इंडेंट जारी हो जाता है।
+            💡 <b>{isHi ? 'स्टॉक चेतावनी नियम:' : 'Stock Alert Policy:'}</b>{' '}
+            {isHi
+              ? '30% से कम होने पर नोडल अधिकारी एवं चारा आपूर्तिकर्ता को स्वचालित इंडेंट जारी हो जाता है।'
+              : 'Automated indent is dispatched to nodal officer & supplier if stock dips below 30%.'}
           </div>
         </div>
       </div>
@@ -137,15 +162,17 @@ export default function ManagerFeedStock({
           <div>
             <h3>
               <Truck size={18} color="var(--saffron)" />
-              धर्मकाँटा (Smart Weighbridge) + ANPR चारा गाड़ी प्रवेश
+              {isHi ? 'धर्मकाँटा (Smart Weighbridge) + ANPR चारा गाड़ी प्रवेश' : 'Smart Weighbridge + ANPR Feed Truck Inward'}
             </h3>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: '2px 0 0' }}>
-              स्वचालित धर्मकाँटा वजन एवं ANPR नंबर प्लेट मिलान सत्यापन
+              {isHi
+                ? 'स्वचालित धर्मकाँटा वजन एवं ANPR नंबर प्लेट मिलान सत्यापन'
+                : 'Automated weighbridge gross/tare matching & ANPR license plate verification'}
             </p>
           </div>
           <button className="btn-gov saffron btn-sm" onClick={handleAddTruckStock}>
             <PlusCircle size={14} />
-            गाड़ी तौल स्वीकारें एवं स्टॉक में जोड़ें (+3,240 kg)
+            {isHi ? 'गाड़ी तौल स्वीकारें एवं स्टॉक में जोड़ें (+3,240 kg)' : 'Accept Weighment & Add to Stock (+3,240 kg)'}
           </button>
         </div>
 
@@ -153,16 +180,16 @@ export default function ManagerFeedStock({
           <table className="gov-table">
             <thead>
               <tr>
-                <th>आईडी</th>
-                <th>वाहन नंबर (ANPR)</th>
-                <th>चालक / विक्रेता</th>
-                <th>सामग्री प्रकार</th>
-                <th>सकल वजन (Gross)</th>
-                <th>खाली वजन (Tare)</th>
-                <th>शुद्ध चारा वजन (Net)</th>
-                <th>चालान वजन</th>
-                <th>अंतर</th>
-                <th>सत्यापन स्थिति</th>
+                <th>{isHi ? 'आईडी' : 'ID'}</th>
+                <th>{isHi ? 'वाहन नंबर (ANPR)' : 'Vehicle No (ANPR)'}</th>
+                <th>{isHi ? 'चालक / विक्रेता' : 'Driver / Vendor'}</th>
+                <th>{isHi ? 'सामग्री प्रकार' : 'Material Type'}</th>
+                <th>{isHi ? 'सकल वजन (Gross)' : 'Gross Wt'}</th>
+                <th>{isHi ? 'खाली वजन (Tare)' : 'Tare Wt'}</th>
+                <th>{isHi ? 'शुद्ध चारा वजन (Net)' : 'Net Wt'}</th>
+                <th>{isHi ? 'चालान वजन' : 'Invoice Wt'}</th>
+                <th>{isHi ? 'अंतर' : 'Variance'}</th>
+                <th>{isHi ? 'सत्यापन स्थिति' : 'Verification Status'}</th>
               </tr>
             </thead>
             <tbody>
@@ -171,20 +198,24 @@ export default function ManagerFeedStock({
                   <td><b style={{ fontFamily: 'var(--font-mono)' }}>{wb.id}</b></td>
                   <td><b style={{ color: 'var(--saffron)' }}>{wb.vehicleNo}</b></td>
                   <td>
-                    {wb.driver}
-                    <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{wb.vendor}</div>
+                    {isHi ? (wb.driverHi || wb.driver) : (wb.driverEn || wb.driver)}
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                      {isHi ? (wb.vendorHi || wb.vendor) : (wb.vendorEn || wb.vendor)}
+                    </div>
                   </td>
-                  <td>{wb.item}</td>
+                  <td>{isHi ? (wb.itemHi || wb.item) : (wb.itemEn || wb.item)}</td>
                   <td>{wb.grossWt} kg</td>
                   <td>{wb.tareWt} kg</td>
                   <td><b>{wb.netWt} kg</b></td>
                   <td>{wb.billWt} kg</td>
                   <td style={{ color: wb.diff === 0 ? 'var(--emerald)' : 'var(--red-alert)', fontWeight: 700 }}>
-                    {wb.diff === 0 ? 'शून्य अंतर ✓' : `${wb.diff} kg अंतर`}
+                    {wb.diff === 0 ? (isHi ? 'शून्य अंतर ✓' : 'Zero Variance ✓') : `${wb.diff} kg ${isHi ? 'अंतर' : 'variance'}`}
                   </td>
                   <td>
                     <span className={`status-badge ${wb.status === 'matched' ? 'ok' : 'warn'}`}>
-                      {wb.status === 'matched' ? 'पूर्ण मिलान ✓' : 'समीक्षा आवश्यक'}
+                      {wb.status === 'matched'
+                        ? (isHi ? 'पूर्ण मिलान ✓' : 'Full Match ✓')
+                        : (isHi ? 'समीक्षा आवश्यक' : 'Review Needed')}
                     </span>
                   </td>
                 </tr>

@@ -118,9 +118,11 @@ export default function AdminDashboard({
           <div className="card-title-row">
             <h3>
               <MapPin size={18} color="var(--saffron)" />
-              छत्तीसगढ़ गो-सेवा संभाग मानचित्र (GIS Telemetry)
+              {isHi ? 'छत्तीसगढ़ गो-सेवा संभाग मानचित्र (GIS Telemetry)' : 'Chhattisgarh Gau-Sewa Division Map (GIS Telemetry)'}
             </h3>
-            <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>6 प्रमुख गौशाला केंद्र</span>
+            <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+              {isHi ? '6 प्रमुख गौशाला केंद्र' : '6 Major Gaushala Centers'}
+            </span>
           </div>
 
           <GISMap
@@ -143,30 +145,44 @@ export default function AdminDashboard({
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                 <b style={{ fontSize: '1rem', color: 'var(--text-primary)' }}>{selectedGaushala.name}</b>
                 <span className={`status-badge ${selectedGaushala.status}`}>
-                  {selectedGaushala.status === 'ok' ? 'पूर्ण सत्यापित' : selectedGaushala.status === 'warn' ? 'चेतावनी' : 'गंभीर अंतर'}
+                  {selectedGaushala.status === 'ok'
+                    ? (isHi ? 'पूर्ण सत्यापित' : 'Fully Verified')
+                    : selectedGaushala.status === 'warn'
+                    ? (isHi ? 'चेतावनी' : 'Warning')
+                    : (isHi ? 'गंभीर अंतर' : 'Severe Variance')}
                 </span>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10, fontSize: '0.8rem' }}>
                 <div>
-                  <span style={{ color: 'var(--text-secondary)' }}>AI सत्यापित / पंजीकृत:</span>
+                  <span style={{ color: 'var(--text-secondary)' }}>
+                    {isHi ? 'AI सत्यापित / पंजीकृत:' : 'AI Verified / Registered:'}
+                  </span>
                   <br />
                   <b style={{ fontSize: '0.95rem', color: selectedGaushala.reg - selectedGaushala.ver > 20 ? 'var(--red-alert)' : 'var(--emerald)' }}>
-                    {selectedGaushala.ver} / {selectedGaushala.reg} गायें
+                    {selectedGaushala.ver} / {selectedGaushala.reg} {isHi ? 'गायें' : 'cattle'}
                   </b>
                 </div>
                 <div>
-                  <span style={{ color: 'var(--text-secondary)' }}>चारा नांद स्थिति:</span>
+                  <span style={{ color: 'var(--text-secondary)' }}>
+                    {isHi ? 'चारा नांद स्थिति:' : 'Feed Trough Status:'}
+                  </span>
                   <br />
                   <b style={{ color: selectedGaushala.feedStatus === 'ok' ? 'var(--emerald)' : 'var(--red-alert)' }}>
-                    {selectedGaushala.feedStatus === 'ok' ? 'समय पर (8:20 AM)' : 'नांद खाली (अलर्ट)'}
+                    {selectedGaushala.feedStatus === 'ok'
+                      ? (isHi ? 'समय पर (8:20 AM)' : 'On Time (8:20 AM)')
+                      : (isHi ? 'नांद खाली (अलर्ट)' : 'Trough Empty (Alert)')}
                   </b>
                 </div>
                 <div>
-                  <span style={{ color: 'var(--text-secondary)' }}>जोखिम स्कोर (AI Risk):</span>
+                  <span style={{ color: 'var(--text-secondary)' }}>
+                    {isHi ? 'जोखिम स्कोर (AI Risk):' : 'Risk Score (AI Risk):'}
+                  </span>
                   <br />
                   <b style={{ color: selectedGaushala.status === 'ok' ? 'var(--emerald)' : 'var(--red-alert)' }}>
-                    {selectedGaushala.status === 'ok' ? '12 / 100 (न्यूनतम)' : '87 / 100 (उच्च जोखिम)'}
+                    {selectedGaushala.status === 'ok'
+                      ? (isHi ? '12 / 100 (न्यूनतम)' : '12 / 100 (Low)')
+                      : (isHi ? '87 / 100 (उच्च जोखिम)' : '87 / 100 (High Risk)')}
                   </b>
                 </div>
               </div>
@@ -177,13 +193,13 @@ export default function AdminDashboard({
                   onClick={() => onOpenAuditModal(selectedGaushala)}
                 >
                   <FileSearch size={14} />
-                  AI ऑडिट रिपोर्ट
+                  {isHi ? 'AI ऑडिट रिपोर्ट' : 'AI Audit Report'}
                 </button>
                 <button
                   className="btn-gov saffron btn-sm"
                   onClick={() => onOpenGrantModal({ g: selectedGaushala, amt: `₹ ${(selectedGaushala.ver * 40 * 75 / 100000).toFixed(2)} L`, index: 0 })}
                 >
-                  अनुदान देखें
+                  {isHi ? 'अनुदान देखें' : 'View Grant'}
                 </button>
               </div>
             </div>
@@ -195,11 +211,11 @@ export default function AdminDashboard({
           <div className="card-title-row">
             <h3>
               <ShieldAlert size={18} color="var(--red-alert)" />
-              वास्तविक समय राज्य अलर्ट (Active AI Triggers)
+              {isHi ? 'वास्तविक समय राज्य अलर्ट (Active AI Triggers)' : 'Real-time State Alerts (Active AI Triggers)'}
             </h3>
             <span className="live-pulse-badge" style={{ color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', borderColor: 'rgba(239, 68, 68, 0.3)' }}>
               <span className="pulsing-dot" style={{ background: '#ef4444' }} />
-              लाइव
+              {isHi ? 'लाइव' : 'LIVE'}
             </span>
           </div>
 
@@ -258,9 +274,9 @@ export default function AdminDashboard({
           <div className="card-title-row">
             <h3>
               <TrendingDown size={18} color="var(--emerald)" />
-              गोवंश मृत्यु दर में कमी ट्रेंड (6 माह AI प्रभाव)
+              {isHi ? 'गोवंश मृत्यु दर में कमी ट्रेंड (6 माह AI प्रभाव)' : 'Cattle Mortality Reduction Trend (6-Mo AI Impact)'}
             </h3>
-            <span className="status-badge ok">46% गिरावट</span>
+            <span className="status-badge ok">{isHi ? '46% गिरावट' : '46% Drop'}</span>
           </div>
 
           {/* SVG Line Chart */}
@@ -308,17 +324,19 @@ export default function AdminDashboard({
               ))}
             </svg>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)', padding: '0 10px' }}>
-              <span>अप्रैल</span>
-              <span>मई</span>
-              <span>जून</span>
-              <span>जुलाई</span>
-              <span>अगस्त</span>
-              <span>सितंबर</span>
-              <span>अक्टूबर (आज)</span>
+              <span>{isHi ? 'अप्रैल' : 'Apr'}</span>
+              <span>{isHi ? 'मई' : 'May'}</span>
+              <span>{isHi ? 'जून' : 'Jun'}</span>
+              <span>{isHi ? 'जुलाई' : 'Jul'}</span>
+              <span>{isHi ? 'अगस्त' : 'Aug'}</span>
+              <span>{isHi ? 'सितंबर' : 'Sep'}</span>
+              <span>{isHi ? 'अक्टूबर (आज)' : 'Oct (Today)'}</span>
             </div>
           </div>
           <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 8 }}>
-            💡 AI द्वारा समय पर गिरी हुई गाय एवं सुस्त पशुओं की पहचान से मृत्यु दर 3.9% से घटकर मात्र 2.1% रह गई।
+            {isHi
+              ? '💡 AI द्वारा समय पर गिरी हुई गाय एवं सुस्त पशुओं की पहचान से मृत्यु दर 3.9% से घटकर मात्र 2.1% रह गई।'
+              : '💡 AI early recognition of fallen and lethargic cattle dropped mortality rate from 3.9% down to 2.1%.'}
           </p>
         </div>
 
@@ -327,16 +345,17 @@ export default function AdminDashboard({
           <div className="card-title-row">
             <h3>
               <Award size={18} color="var(--saffron)" />
-              अनुदान सत्यापन वितरण (DBT Compliance)
+              {isHi ? 'अनुदान सत्यापन वितरण (DBT Compliance)' : 'Grant Verification Distribution (DBT)'}
             </h3>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>तिमाही Q3</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+              {isHi ? 'तिमाही Q3' : 'Quarter Q3'}
+            </span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
             {/* SVG Donut */}
             <svg viewBox="0 0 120 120" style={{ width: 130, height: 130, flexShrink: 0 }}>
               {/* Segments: 82% OK, 11% Warn, 7% Bad */}
-              {/* Circumference = 2 * pi * 42 = 263.89 */}
               <circle cx="60" cy="60" r="42" fill="none" stroke="var(--border-color)" strokeWidth="16" />
               {/* Green: 82% = 216.39 */}
               <circle
@@ -383,21 +402,21 @@ export default function AdminDashboard({
               <div className="stock-bar-row">
                 <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.82rem' }}>
                   <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#15803d' }} />
-                  पूर्ण सत्यापित (DBT जारी)
+                  {isHi ? 'पूर्ण सत्यापित (DBT जारी)' : 'Fully Verified (DBT Released)'}
                 </span>
                 <b>82%</b>
               </div>
               <div className="stock-bar-row">
                 <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.82rem' }}>
                   <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#d97706' }} />
-                  समीक्षाधीन (Verification)
+                  {isHi ? 'समीक्षाधीन (Verification)' : 'Under Review (Verification)'}
                 </span>
                 <b>11%</b>
               </div>
               <div className="stock-bar-row">
                 <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.82rem' }}>
                   <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#dc2626' }} />
-                  रोका गया (Ghost Cattle)
+                  {isHi ? 'रोका गया (Ghost Cattle)' : 'Withheld (Ghost Cattle)'}
                 </span>
                 <b style={{ color: 'var(--red-alert)' }}>7%</b>
               </div>
@@ -410,9 +429,15 @@ export default function AdminDashboard({
       <div className="dash-card">
         <div className="card-title-row">
           <div>
-            <h3>गौशाला मास्टर सूची · पंजीकृत बनाम AI सत्यापित गणना</h3>
+            <h3>
+              {isHi
+                ? 'गौशाला मास्टर सूची · पंजीकृत बनाम AI सत्यापित गणना'
+                : 'Gaushala Master Ledger · Registered vs AI Verified Count'}
+            </h3>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: '2px 0 0' }}>
-              प्रत्येक गौशाला की लाइव स्थिति, गणना अंतर एवं त्वरित कार्य
+              {isHi
+                ? 'प्रत्येक गौशाला की लाइव स्थिति, गणना अंतर एवं त्वरित कार्य'
+                : 'Live status, count variance and rapid actions for each gaushala'}
             </p>
           </div>
           <div style={{ position: 'relative', minWidth: 220 }}>
@@ -421,7 +446,7 @@ export default function AdminDashboard({
               type="text"
               className="form-input"
               style={{ paddingLeft: 32, fontSize: '0.78rem' }}
-              placeholder="गौशाला या जिला खोजें..."
+              placeholder={isHi ? "गौशाला या जिला खोजें..." : "Search gaushala or district..."}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -432,16 +457,16 @@ export default function AdminDashboard({
           <table className="gov-table">
             <thead>
               <tr>
-                <th>कोड</th>
-                <th>गौशाला का नाम</th>
-                <th>जिला / संभाग</th>
-                <th>पंजीकृत</th>
-                <th>AI सत्यापित</th>
-                <th>गणना अंतर (%)</th>
-                <th>चारा स्थिति</th>
-                <th>ऑडिट स्कोर</th>
-                <th>स्थिति</th>
-                <th>कार्यवाही</th>
+                <th>{isHi ? 'कोड' : 'Code'}</th>
+                <th>{isHi ? 'गौशाला का नाम' : 'Gaushala Name'}</th>
+                <th>{isHi ? 'जिला / संभाग' : 'District / Zone'}</th>
+                <th>{isHi ? 'पंजीकृत' : 'Registered'}</th>
+                <th>{isHi ? 'AI सत्यापित' : 'AI Verified'}</th>
+                <th>{isHi ? 'गणना अंतर (%)' : 'Variance (%)'}</th>
+                <th>{isHi ? 'चारा स्थिति' : 'Feed Status'}</th>
+                <th>{isHi ? 'ऑडिट स्कोर' : 'Audit Score'}</th>
+                <th>{isHi ? 'स्थिति' : 'Status'}</th>
+                <th>{isHi ? 'कार्यवाही' : 'Action'}</th>
               </tr>
             </thead>
             <tbody>
@@ -457,17 +482,23 @@ export default function AdminDashboard({
                     <td>{g.reg}</td>
                     <td><b style={{ color: 'var(--emerald)' }}>{g.ver}</b></td>
                     <td style={{ color: diff > 20 ? 'var(--red-alert)' : 'var(--emerald)', fontWeight: 700 }}>
-                      {diffPct}% {diff > 0 ? `(${diff} गायें)` : '✓'}
+                      {diffPct}% {diff > 0 ? (isHi ? `(${diff} गायें)` : `(${diff} cattle)`) : '✓'}
                     </td>
                     <td>
                       <span className={`status-badge ${g.feedStatus === 'ok' ? 'ok' : 'bad'}`}>
-                        {g.feedStatus === 'ok' ? 'समय पर ✓' : 'देरी / खाली ⚠️'}
+                        {g.feedStatus === 'ok'
+                          ? (isHi ? 'समय पर ✓' : 'On Time ✓')
+                          : (isHi ? 'देरी / खाली ⚠️' : 'Delay / Empty ⚠️')}
                       </span>
                     </td>
                     <td><b>{g.lastAuditScore}/100</b></td>
                     <td>
                       <span className={`status-badge ${g.status}`}>
-                        {g.status === 'ok' ? 'सत्यापित' : g.status === 'warn' ? 'चेतावनी' : 'गंभीर अंतर'}
+                        {g.status === 'ok'
+                          ? (isHi ? 'सत्यापित' : 'Verified')
+                          : g.status === 'warn'
+                          ? (isHi ? 'चेतावनी' : 'Warning')
+                          : (isHi ? 'गंभीर अंतर' : 'Variance')}
                       </span>
                     </td>
                     <td>
@@ -475,16 +506,16 @@ export default function AdminDashboard({
                         <button
                           className="btn-gov outline btn-sm"
                           onClick={() => onOpenAuditModal(g)}
-                          title="ऑडिट रिपोर्ट"
+                          title={isHi ? "ऑडिट रिपोर्ट" : "Audit Report"}
                         >
-                          ऑडिट
+                          {isHi ? 'ऑडिट' : 'Audit'}
                         </button>
                         <button
                           className="btn-gov saffron btn-sm"
                           onClick={() => setSelectedId(g.id)}
-                          title="मानचित्र पर देखें"
+                          title={isHi ? "मानचित्र पर देखें" : "View on Map"}
                         >
-                          देखें
+                          {isHi ? 'देखें' : 'View'}
                         </button>
                       </div>
                     </td>

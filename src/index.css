@@ -248,6 +248,59 @@ body {
   transform: translateY(-1px);
 }
 
+/* Dual Language Selector */
+.language-selector {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 20px;
+  padding: 2px 4px;
+  gap: 2px;
+  backdrop-filter: blur(8px);
+}
+
+.lang-icon {
+  color: #fb923c;
+  margin: 0 4px 0 6px;
+  flex-shrink: 0;
+}
+
+.lang-option-btn {
+  background: transparent;
+  border: none;
+  color: #cbd5e1;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: var(--font-body);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+}
+
+.lang-option-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.lang-option-btn.active {
+  background: linear-gradient(135deg, var(--saffron), #e0560b);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(242, 106, 27, 0.38);
+}
+
+.lang-divider {
+  color: rgba(255, 255, 255, 0.22);
+  font-size: 0.75rem;
+  user-select: none;
+}
+
 .badge-counter {
   position: absolute;
   top: -5px;

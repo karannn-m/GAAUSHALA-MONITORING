@@ -5,8 +5,10 @@ import { playSuccessSound } from '../../sound';
 import { useLanguage } from '../../context/LanguageContext';
 
 export default function SubVerification({ gaushalas, onOpenPhotoModal, onShowToast }) {
-  const { t } = useLanguage();
-  const zoneGaushalas = gaushalas.filter((g) => g.zone === 'रायपुर ज़ोन');
+  const { isHi, t } = useLanguage();
+  const zoneGaushalas = gaushalas.filter(
+    (g) => g.zone === (isHi ? 'रायपुर ज़ोन' : 'Raipur Zone') || g.zone.includes('रायपुर') || g.zone.includes('Raipur')
+  );
 
   const totalClaimed = zoneGaushalas.reduce((acc, g) => acc + (g.reg * 40 * 75), 0);
   const totalVerified = zoneGaushalas.reduce((acc, g) => acc + (g.ver * 40 * 75), 0);
@@ -14,7 +16,11 @@ export default function SubVerification({ gaushalas, onOpenPhotoModal, onShowToa
 
   const handleVerifyReport = (gaushala) => {
     playSuccessSound();
-    onShowToast(`✓ ${gaushala.name} का ₹${((gaushala.ver * 40 * 75) / 100000).toFixed(2)} L अनुदान सत्यापित कर राज्य को अग्रसारित किया गया`);
+    onShowToast(
+      isHi
+        ? `✓ ${gaushala.name} का ₹${((gaushala.ver * 40 * 75) / 100000).toFixed(2)} L अनुदान सत्यापित कर राज्य को अग्रसारित किया गया`
+        : `✓ ${gaushala.name} grant of ₹${((gaushala.ver * 40 * 75) / 100000).toFixed(2)} L verified & forwarded to State`
+    );
   };
 
   return (
@@ -91,7 +97,9 @@ export default function SubVerification({ gaushalas, onOpenPhotoModal, onShowToa
                     </td>
                     <td>
                       <span className={`status-badge ${g.feedStatus === 'ok' ? 'ok' : 'bad'}`}>
-                        {g.feedStatus === 'ok' ? 'नांद भरी ✓' : 'खाली / विलंब ⚠️'}
+                        {g.feedStatus === 'ok'
+                          ? (isHi ? 'नांद भरी ✓' : 'Trough Full ✓')
+                          : (isHi ? 'खाली / विलंब ⚠️' : 'Empty / Delayed ⚠️')}
                       </span>
                     </td>
                     <td>

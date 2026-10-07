@@ -1,35 +1,39 @@
 import React, { useState } from 'react';
 import { X, Stethoscope, PlusCircle } from 'lucide-react';
 import { playSuccessSound } from '../../sound';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function AddHealthModal({ onClose, onAddRecord }) {
+  const { isHi } = useLanguage();
   const [tag, setTag] = useState('');
   const [cowName, setCowName] = useState('');
-  const [breed, setBreed] = useState('देसी');
+  const [breed, setBreed] = useState(isHi ? 'देसी' : 'Indigenous');
   const [condition, setCondition] = useState('');
-  const [type, setType] = useState('उपचार');
-  const [vet, setVet] = useState('डॉ. ए. के. मिश्रा (B.V.Sc)');
+  const [type, setType] = useState(isHi ? 'उपचार' : 'Treatment');
+  const [vet, setVet] = useState('Dr. A. K. Mishra (B.V.Sc)');
   const [dosage, setDosage] = useState('');
   const [severity, setSeverity] = useState('medium');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!tag.trim() || !condition.trim()) {
-      alert('कृपया टैग ID और स्थिति विवरण भरें');
+      alert(isHi ? 'कृपया टैग ID और स्थिति विवरण भरें' : 'Please provide Tag ID and condition details');
       return;
     }
 
     const newRecord = {
       id: 'VET-' + Math.floor(100 + Math.random() * 900),
       tag: tag.startsWith('IN') ? tag : `IN9820-${tag}`,
-      cowName: cowName || 'गौमाता',
+      cowName: cowName || (isHi ? 'गौमाता' : 'Gaumata'),
       breed,
       condition: `${type}: ${condition}`,
       vet,
-      status: type === 'टीकाकरण' ? 'टीकाकृत' : 'उपचाराधीन',
+      status: type.includes('टीकाकरण') || type.includes('Vaccination')
+        ? (isHi ? 'टीकाकृत' : 'Vaccinated')
+        : (isHi ? 'उपचाराधीन' : 'Under Treatment'),
       date: new Date().toISOString().split('T')[0],
       shed: 'Shed-A (Clinic)',
-      dosage: dosage || 'सामान्य निगरानी',
+      dosage: dosage || (isHi ? 'सामान्य निगरानी' : 'Routine Monitoring'),
       severity
     };
 
@@ -45,7 +49,9 @@ export default function AddHealthModal({ onClose, onAddRecord }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <Stethoscope size={18} color="var(--emerald)" />
             <b style={{ fontSize: '1rem', color: 'var(--text-primary)' }}>
-              नया पशु चिकित्सा / टीकाकरण रिकॉर्ड दर्ज करें
+              {isHi
+                ? 'नया पशु चिकित्सा / टीकाकरण रिकॉर्ड दर्ज करें'
+                : 'Log New Veterinary / Vaccination Entry'}
             </b>
           </div>
           <button className="icon-action-btn" onClick={onClose} style={{ width: 28, height: 28 }}>
@@ -57,11 +63,11 @@ export default function AddHealthModal({ onClose, onAddRecord }) {
           <div className="modal-body">
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <div className="form-group">
-                <label className="form-label">RFID टैग ID *</label>
+                <label className="form-label">{isHi ? 'RFID टैग ID *' : 'RFID Tag ID *'}</label>
                 <input
                   type="text"
                   className="form-input"
-                  placeholder="उदा. 4471 या IN9820-4471"
+                  placeholder={isHi ? 'उदा. 4471 या IN9820-4471' : 'e.g. 4471 or IN9820-4471'}
                   value={tag}
                   onChange={(e) => setTag(e.target.value)}
                   required
@@ -69,11 +75,11 @@ export default function AddHealthModal({ onClose, onAddRecord }) {
               </div>
 
               <div className="form-group">
-                <label className="form-label">गाय का नाम / पहचान</label>
+                <label className="form-label">{isHi ? 'गाय का नाम / पहचान' : 'Cow Name / Ident'}</label>
                 <input
                   type="text"
                   className="form-input"
-                  placeholder="उदा. सुरभि / गौरी"
+                  placeholder={isHi ? 'उदा. सुरभि / गौरी' : 'e.g. Surabhi / Gauri'}
                   value={cowName}
                   onChange={(e) => setCowName(e.target.value)}
                 />
@@ -82,33 +88,33 @@ export default function AddHealthModal({ onClose, onAddRecord }) {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <div className="form-group">
-                <label className="form-label">नस्ल</label>
+                <label className="form-label">{isHi ? 'नस्ल' : 'Breed'}</label>
                 <select className="form-select" value={breed} onChange={(e) => setBreed(e.target.value)}>
-                  <option value="देसी">देसी (Indigenous)</option>
-                  <option value="गीर">गीर (Gir)</option>
-                  <option value="साहीवाल">साहीवाल (Sahiwal)</option>
-                  <option value="थारपारकर">थारपारकर</option>
-                  <option value="राठी">राठी</option>
+                  <option value={isHi ? 'देसी' : 'Indigenous'}>{isHi ? 'देसी (Indigenous)' : 'Indigenous (Desi)'}</option>
+                  <option value={isHi ? 'गीर' : 'Gir'}>{isHi ? 'गीर (Gir)' : 'Gir'}</option>
+                  <option value={isHi ? 'साहीवाल' : 'Sahiwal'}>{isHi ? 'साहीवाल (Sahiwal)' : 'Sahiwal'}</option>
+                  <option value={isHi ? 'थारपारकर' : 'Tharparkar'}>{isHi ? 'थारपारकर' : 'Tharparkar'}</option>
+                  <option value={isHi ? 'राठी' : 'Rathi'}>{isHi ? 'राठी' : 'Rathi'}</option>
                 </select>
               </div>
 
               <div className="form-group">
-                <label className="form-label">रिकॉर्ड का प्रकार</label>
+                <label className="form-label">{isHi ? 'रिकॉर्ड का प्रकार' : 'Record Type'}</label>
                 <select className="form-select" value={type} onChange={(e) => setType(e.target.value)}>
-                  <option value="उपचार">बीमारी / उपचार (Treatment)</option>
-                  <option value="टीकाकरण (FMD)">FMD खुरपका-मुँहपका टीका</option>
-                  <option value="टीकाकरण (HS-BQ)">गलघोंटू (HS-BQ) टीका</option>
-                  <option value="नियमित स्वास्थ्य जाँच">नियमित स्वास्थ्य परीक्षण</option>
+                  <option value={isHi ? 'उपचार' : 'Treatment'}>{isHi ? 'बीमारी / उपचार (Treatment)' : 'Illness / Treatment'}</option>
+                  <option value={isHi ? 'टीकाकरण (FMD)' : 'Vaccination (FMD)'}>{isHi ? 'FMD खुरपका-मुँहपका टीका' : 'FMD Foot & Mouth Vaccine'}</option>
+                  <option value={isHi ? 'टीकाकरण (HS-BQ)' : 'Vaccination (HS-BQ)'}>{isHi ? 'गलघोंटू (HS-BQ) टीका' : 'HS-BQ Vaccine'}</option>
+                  <option value={isHi ? 'नियमित स्वास्थ्य जाँच' : 'Routine Checkup'}>{isHi ? 'नियमित स्वास्थ्य परीक्षण' : 'Routine Health Checkup'}</option>
                 </select>
               </div>
             </div>
 
             <div className="form-group">
-              <label className="form-label">लक्षण / रोग विवरण *</label>
+              <label className="form-label">{isHi ? 'लक्षण / रोग विवरण *' : 'Symptoms / Clinical Notes *'}</label>
               <input
                 type="text"
                 className="form-input"
-                placeholder="उदा. पिछले 2 दिन से लंगड़ापन, सूजन"
+                placeholder={isHi ? 'उदा. पिछले 2 दिन से लंगड़ापन, सूजन' : 'e.g. Mild lameness, fever for 2 days'}
                 value={condition}
                 onChange={(e) => setCondition(e.target.value)}
                 required
@@ -117,43 +123,43 @@ export default function AddHealthModal({ onClose, onAddRecord }) {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <div className="form-group">
-                <label className="form-label">दवा / खुराक (Dosage)</label>
+                <label className="form-label">{isHi ? 'दवा / खुराक (Dosage)' : 'Medication / Dosage'}</label>
                 <input
                   type="text"
                   className="form-input"
-                  placeholder="उदा. Meloxicam 15ml"
+                  placeholder={isHi ? 'उदा. Meloxicam 15ml' : 'e.g. Meloxicam 15ml'}
                   value={dosage}
                   onChange={(e) => setDosage(e.target.value)}
                 />
               </div>
 
               <div className="form-group">
-                <label className="form-label">प्राथमिकता / गंभीरता</label>
+                <label className="form-label">{isHi ? 'प्राथमिकता / गंभीरता' : 'Priority / Severity'}</label>
                 <select className="form-select" value={severity} onChange={(e) => setSeverity(e.target.value)}>
-                  <option value="low">🟢 सामान्य (Routine)</option>
-                  <option value="medium">🟠 मध्यम (Monitor)</option>
-                  <option value="high">🔴 गंभीर (Urgent Care)</option>
+                  <option value="low">{isHi ? '🟢 सामान्य (Routine)' : '🟢 Routine'}</option>
+                  <option value="medium">{isHi ? '🟠 मध्यम (Monitor)' : '🟠 Monitor'}</option>
+                  <option value="high">{isHi ? '🔴 गंभीर (Urgent Care)' : '🔴 Urgent Care'}</option>
                 </select>
               </div>
             </div>
 
             <div className="form-group">
-              <label className="form-label">जाँचकर्ता पशु चिकित्सक (Veterinarian)</label>
+              <label className="form-label">{isHi ? 'जाँचकर्ता पशु चिकित्सक (Veterinarian)' : 'Attending Veterinarian'}</label>
               <select className="form-select" value={vet} onChange={(e) => setVet(e.target.value)}>
-                <option value="डॉ. ए. के. मिश्रा (B.V.Sc)">डॉ. ए. के. मिश्रा (B.V.Sc)</option>
-                <option value="डॉ. वी. के. पटेल (M.V.Sc)">डॉ. वी. के. पटेल (M.V.Sc)</option>
-                <option value="डॉ. सीमा चंद्राकर">डॉ. सीमा चंद्राकर</option>
+                <option value="Dr. A. K. Mishra (B.V.Sc)">{isHi ? 'डॉ. ए. के. मिश्रा (B.V.Sc)' : 'Dr. A. K. Mishra (B.V.Sc)'}</option>
+                <option value="Dr. V. K. Patel (M.V.Sc)">{isHi ? 'डॉ. वी. के. पटेल (M.V.Sc)' : 'Dr. V. K. Patel (M.V.Sc)'}</option>
+                <option value="Dr. Seema Chandrakar">{isHi ? 'डॉ. सीमा चंद्राकर' : 'Dr. Seema Chandrakar'}</option>
               </select>
             </div>
           </div>
 
           <div className="modal-footer">
             <button type="button" className="btn-gov outline" onClick={onClose}>
-              रद्द करें
+              {isHi ? 'रद्द करें' : 'Cancel'}
             </button>
             <button type="submit" className="btn-gov emerald">
               <PlusCircle size={16} />
-              स्वास्थ्य रिकॉर्ड सहेजें
+              {isHi ? 'स्वास्थ्य रिकॉर्ड सहेजें' : 'Save Health Entry'}
             </button>
           </div>
         </form>

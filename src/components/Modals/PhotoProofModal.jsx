@@ -1,7 +1,9 @@
 import React from 'react';
 import { X, CheckCircle, Camera, Calendar, MapPin, Tag } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function PhotoProofModal({ proofData, onClose }) {
+  const { isHi } = useLanguage();
   if (!proofData) return null;
 
   return (
@@ -12,7 +14,8 @@ export default function PhotoProofModal({ proofData, onClose }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <Camera size={18} color="var(--saffron)" />
             <b style={{ fontSize: '1rem', color: 'var(--text-primary)' }}>
-              AI फोटो-प्रमाण · {proofData.title || proofData.name}
+              {isHi ? 'AI फोटो-प्रमाण · ' : 'AI Photo Proof · '}
+              {proofData.title || proofData.name}
             </b>
           </div>
           <button className="icon-action-btn" onClick={onClose} style={{ width: 28, height: 28 }}>
@@ -48,21 +51,27 @@ export default function PhotoProofModal({ proofData, onClose }) {
               className="ai-bbox"
               style={{ left: '15%', top: '40%', width: '22%', height: '42%' }}
             >
-              <div className="ai-bbox-label">गाय #1187 (गीर) 98.4%</div>
+              <div className="ai-bbox-label">
+                {isHi ? 'गाय #1187 (गीर) 98.4%' : 'Cow #1187 (Gir) 98.4%'}
+              </div>
             </div>
 
             <div
               className="ai-bbox"
               style={{ left: '42%', top: '35%', width: '24%', height: '46%' }}
             >
-              <div className="ai-bbox-label">गाय #4471 (साहीवाल) 97.2%</div>
+              <div className="ai-bbox-label">
+                {isHi ? 'गाय #4471 (साहीवाल) 97.2%' : 'Cow #4471 (Sahiwal) 97.2%'}
+              </div>
             </div>
 
             <div
               className="ai-bbox"
               style={{ left: '70%', top: '42%', width: '20%', height: '38%' }}
             >
-              <div className="ai-bbox-label">गाय #3320 (देसी) 99.1%</div>
+              <div className="ai-bbox-label">
+                {isHi ? 'गाय #3320 (देसी) 99.1%' : 'Cow #3320 (Desi) 99.1%'}
+              </div>
             </div>
 
             {/* Proof Metadata Watermark */}
@@ -102,16 +111,24 @@ export default function PhotoProofModal({ proofData, onClose }) {
           {/* Verification Details */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12 }}>
             <div style={{ background: 'var(--badge-bg)', padding: 10, borderRadius: 6 }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>कैमरा नोड</div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                {isHi ? 'कैमरा नोड' : 'Camera Node'}
+              </div>
               <b>Gate-1 South (Edge Cam 02)</b>
             </div>
             <div style={{ background: 'var(--badge-bg)', padding: 10, borderRadius: 6 }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>सत्यापन समय</div>
-              <b>आज सुबह 08:32 AM</b>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                {isHi ? 'सत्यापन समय' : 'Verification Time'}
+              </div>
+              <b>{isHi ? 'आज सुबह 08:32 AM' : 'Today 08:32 AM'}</b>
             </div>
             <div style={{ background: 'var(--badge-bg)', padding: 10, borderRadius: 6 }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>RFID क्रॉस-चेक</div>
-              <b style={{ color: 'var(--emerald)' }}>100% मिलान (3/3)</b>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+                {isHi ? 'RFID क्रॉस-चेक' : 'RFID Cross-Check'}
+              </div>
+              <b style={{ color: 'var(--emerald)' }}>
+                {isHi ? '100% मिलान (3/3)' : '100% Match (3/3)'}
+              </b>
             </div>
           </div>
         </div>
@@ -119,16 +136,20 @@ export default function PhotoProofModal({ proofData, onClose }) {
         {/* Footer */}
         <div className="modal-footer">
           <button className="btn-gov outline" onClick={onClose}>
-            बंद करें
+            {isHi ? 'बंद करें' : 'Close'}
           </button>
           <button
             className="btn-gov emerald"
             onClick={() => {
-              alert('डिजिटल हस्ताक्षरित प्रमाण पत्र डाउनलोड किया जा रहा है');
+              alert(
+                isHi
+                  ? 'डिजिटल हस्ताक्षरित प्रमाण पत्र डाउनलोड किया जा रहा है'
+                  : 'Downloading digitally signed certificate'
+              );
               onClose();
             }}
           >
-            डिजिटल प्रमाण पत्र डाउनलोड करें
+            {isHi ? 'डिजिटल प्रमाण पत्र डाउनलोड करें' : 'Download Digital Certificate'}
           </button>
         </div>
       </div>

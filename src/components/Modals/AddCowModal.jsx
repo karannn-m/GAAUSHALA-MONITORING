@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { X, Save, Tag } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function AddCowModal({ onClose, onAddCow }) {
+  const { isHi } = useLanguage();
   const [tag, setTag] = useState('');
-  const [breed, setBreed] = useState('देशी');
+  const [breed, setBreed] = useState(isHi ? 'देशी' : 'Desi');
   const [age, setAge] = useState('');
-  const [gender, setGender] = useState('गाय');
-  const [health, setHealth] = useState('स्वस्थ');
+  const [gender, setGender] = useState(isHi ? 'गाय' : 'Cow');
+  const [health, setHealth] = useState(isHi ? 'स्वस्थ' : 'Healthy');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -19,7 +21,7 @@ export default function AddCowModal({ onClose, onAddCow }) {
       age,
       gender,
       health,
-      date: new Date().toLocaleDateString('en-IN')
+      date: new Date().toLocaleDateString(isHi ? 'hi-IN' : 'en-IN')
     });
     onClose();
   };
@@ -30,7 +32,7 @@ export default function AddCowModal({ onClose, onAddCow }) {
         <div className="modal-header">
           <h3 style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <Tag size={20} color="var(--emerald)" />
-            नया गोवंश पंजीकरण (New Cow Entry)
+            {isHi ? 'नया गोवंश पंजीकरण (New Cow Entry)' : 'New Cattle Registration'}
           </h3>
           <button className="icon-action-btn" onClick={onClose}>
             <X size={18} />
@@ -40,11 +42,13 @@ export default function AddCowModal({ onClose, onAddCow }) {
         <div className="modal-body">
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div className="form-group">
-              <label className="form-label">UHF RFID / टैग नंबर *</label>
+              <label className="form-label">
+                {isHi ? 'UHF RFID / टैग नंबर *' : 'UHF RFID / Tag Number *'}
+              </label>
               <input
                 type="text"
                 className="form-input"
-                placeholder="उदा. IN9820-5512"
+                placeholder={isHi ? 'उदा. IN9820-5512' : 'e.g. IN9820-5512'}
                 value={tag}
                 onChange={(e) => setTag(e.target.value)}
                 required
@@ -53,21 +57,21 @@ export default function AddCowModal({ onClose, onAddCow }) {
 
             <div className="grid-2col" style={{ gap: 12, marginBottom: 0 }}>
               <div className="form-group">
-                <label className="form-label">नस्ल (Breed)</label>
+                <label className="form-label">{isHi ? 'नस्ल (Breed)' : 'Breed'}</label>
                 <select className="form-input" value={breed} onChange={(e) => setBreed(e.target.value)}>
-                  <option>देशी</option>
-                  <option>गीर</option>
-                  <option>साहीवाल</option>
-                  <option>थारपारकर</option>
-                  <option>अन्य</option>
+                  <option value={isHi ? 'देशी' : 'Desi'}>{isHi ? 'देशी' : 'Desi'}</option>
+                  <option value={isHi ? 'गीर' : 'Gir'}>{isHi ? 'गीर' : 'Gir'}</option>
+                  <option value={isHi ? 'साहीवाल' : 'Sahiwal'}>{isHi ? 'साहीवाल' : 'Sahiwal'}</option>
+                  <option value={isHi ? 'थारपारकर' : 'Tharparkar'}>{isHi ? 'थारपारकर' : 'Tharparkar'}</option>
+                  <option value={isHi ? 'अन्य' : 'Other'}>{isHi ? 'अन्य' : 'Other'}</option>
                 </select>
               </div>
               <div className="form-group">
-                <label className="form-label">आयु (वर्षों में)</label>
+                <label className="form-label">{isHi ? 'आयु (वर्षों में)' : 'Age (Years)'}</label>
                 <input
                   type="number"
                   className="form-input"
-                  placeholder="उदा. 4"
+                  placeholder={isHi ? 'उदा. 4' : 'e.g. 4'}
                   value={age}
                   onChange={(e) => setAge(e.target.value)}
                 />
@@ -76,19 +80,21 @@ export default function AddCowModal({ onClose, onAddCow }) {
 
             <div className="grid-2col" style={{ gap: 12, marginBottom: 0 }}>
               <div className="form-group">
-                <label className="form-label">लिंग (Gender)</label>
+                <label className="form-label">{isHi ? 'लिंग (Gender)' : 'Gender'}</label>
                 <select className="form-input" value={gender} onChange={(e) => setGender(e.target.value)}>
-                  <option>गाय</option>
-                  <option>बैल / नंदी</option>
-                  <option>बछड़ा / बछड़ी</option>
+                  <option value={isHi ? 'गाय' : 'Cow'}>{isHi ? 'गाय' : 'Cow'}</option>
+                  <option value={isHi ? 'बैल / नंदी' : 'Bull'}>{isHi ? 'बैल / नंदी' : 'Bull'}</option>
+                  <option value={isHi ? 'बछड़ा / बछड़ी' : 'Calf'}>{isHi ? 'बछड़ा / बछड़ी' : 'Calf'}</option>
                 </select>
               </div>
               <div className="form-group">
-                <label className="form-label">स्वास्थ्य स्थिति</label>
+                <label className="form-label">{isHi ? 'स्वास्थ्य स्थिति' : 'Health Status'}</label>
                 <select className="form-input" value={health} onChange={(e) => setHealth(e.target.value)}>
-                  <option>स्वस्थ</option>
-                  <option>कमजोर</option>
-                  <option>बीमार (उपचार आवश्यक)</option>
+                  <option value={isHi ? 'स्वस्थ' : 'Healthy'}>{isHi ? 'स्वस्थ' : 'Healthy'}</option>
+                  <option value={isHi ? 'कमजोर' : 'Weak'}>{isHi ? 'कमजोर' : 'Weak'}</option>
+                  <option value={isHi ? 'बीमार (उपचार आवश्यक)' : 'Sick (Care Needed)'}>
+                    {isHi ? 'बीमार (उपचार आवश्यक)' : 'Sick (Care Needed)'}
+                  </option>
                 </select>
               </div>
             </div>
@@ -96,7 +102,7 @@ export default function AddCowModal({ onClose, onAddCow }) {
             <div style={{ marginTop: 10 }}>
               <button type="submit" className="btn-gov emerald" style={{ width: '100%', justifyContent: 'center' }}>
                 <Save size={16} />
-                गोवंश पंजीकृत करें (Submit)
+                {isHi ? 'गोवंश पंजीकृत करें (Submit)' : 'Register Cattle (Submit)'}
               </button>
             </div>
           </form>

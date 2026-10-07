@@ -163,83 +163,113 @@ export const INITIAL_ALERTS = [
     type: "critical",
     category: "feed",
     title: "चारा नहीं मिला – कामधेनु गौशाला, तिल्दा",
+    titleHi: "चारा नहीं मिला – कामधेनु गौशाला, तिल्दा",
+    titleEn: "Fodder Not Served – Kamdhenu Gaushala, Tilda",
     desc: "सुबह 9:00 तक मुख्य नांद खाली दर्ज की गई · AI Feed Vision Analysis",
+    descHi: "सुबह 9:00 तक मुख्य नांद खाली दर्ज की गई · AI Feed Vision Analysis",
+    descEn: "Main feed trough detected empty past 9:00 AM · AI Feed Vision Analysis",
     time: "09:12 AM",
     gaushalaId: "RPR-02",
     gaushalaName: "कामधेनु गौशाला, तिल्दा",
     status: "pending",
-    actionTaken: null
+    actionTaken: null,
+    actionTakenHi: null,
+    actionTakenEn: null
   },
   {
     id: "ALT-102",
     type: "critical",
     category: "health",
     title: "गिरी हुई गाय (Tag #4471) – बिलासपुर",
+    titleHi: "गिरी हुई गाय (Tag #4471) – बिलासपुर",
+    titleEn: "Downed Cow Recumbency Alert (Tag #4471) – Bilaspur",
     desc: "Shed-B में पिछले 5 घंटे से गाय स्थिर/लेटी अवस्था में पाई गई",
+    descHi: "Shed-B में पिछले 5 घंटे से गाय स्थिर/लेटी अवस्था में पाई गई",
+    descEn: "Cow immobilized/lying down for over 5 hours in Shed-B",
     time: "11:40 AM",
     gaushalaId: "BLP-01",
     gaushalaName: "सुरभि गौशाला, बिलासपुर",
     status: "pending",
-    actionTaken: null
+    actionTaken: null,
+    actionTakenHi: null,
+    actionTakenEn: null
   },
   {
     id: "ALT-103",
     type: "warning",
     category: "gate",
     title: "गाय वापस नहीं लौटी – Missing Cow Alert (#2290)",
+    titleHi: "गाय वापस नहीं लौटी – Missing Cow Alert (#2290)",
+    titleEn: "Pasture Return Delayed – Missing Cow Alert (#2290)",
     desc: "शाम 6:00 बजे की समय-सीमा के बाद भी RFID गेट एंट्री दर्ज नहीं हुई",
+    descHi: "शाम 6:00 बजे की समय-सीमा के बाद भी RFID गेट एंट्री दर्ज नहीं हुई",
+    descEn: "No RFID gate return scan recorded past 6:00 PM pasture cutoff",
     time: "06:05 PM",
     gaushalaId: "RPR-01",
     gaushalaName: "श्री कृष्ण गौशाला, आरंग",
     status: "acknowledged",
-    actionTaken: "चरवाहा टीम को सूचित किया गया"
+    actionTaken: "चरवाहा टीम को सूचित किया गया",
+    actionTakenHi: "चरवाहा टीम को सूचित किया गया",
+    actionTakenEn: "Herder patrol notified"
   },
   {
     id: "ALT-104",
     type: "warning",
     category: "security",
     title: "रात्रि घुसपैठ – आरंग गौशाला उत्तरी गेट",
+    titleHi: "रात्रि घुसपैठ – आरंग गौशाला उत्तरी गेट",
+    titleEn: "Night Intrusion Alert – Arang Gaushala North Gate",
     desc: "मध्यरात्रि बाउंड्री वॉल के पास अज्ञात मानव गति का AI डिटेक्शन",
+    descHi: "मध्यरात्रि बाउंड्री वॉल के पास अज्ञात मानव गति का AI डिटेक्शन",
+    descEn: "AI detected unauthorized human movement near perimeter boundary",
     time: "02:14 AM",
     gaushalaId: "RPR-01",
     gaushalaName: "श्री कृष्ण गौशाला, आरंग",
     status: "resolved",
-    actionTaken: "सुरक्षा गार्ड द्वारा जांच पूर्ण"
+    actionTaken: "सुरक्षा गार्ड द्वारा जांच पूर्ण",
+    actionTakenHi: "सुरक्षा गार्ड द्वारा जांच पूर्ण",
+    actionTakenEn: "Verified by night patrol guard"
   },
   {
     id: "ALT-105",
     type: "info",
     category: "audit",
     title: "औचक निरीक्षण अनुशंसित – तिल्दा",
+    titleHi: "औचक निरीक्षण अनुशंसित – तिल्दा",
+    titleEn: "Surprise Inspection Recommended – Tilda",
     desc: "पंजीकृत 180 बनाम AI सत्यापित 121 (33% गणना अंतर) · Ghost Cattle संदेह",
+    descHi: "पंजीकृत 180 बनाम AI सत्यापित 121 (33% गणना अंतर) · Ghost Cattle संदेह",
+    descEn: "Registered 180 vs AI verified 121 (33% variance) · Ghost Cattle suspicion",
     time: "Yesterday",
     gaushalaId: "RPR-02",
     gaushalaName: "कामधेनु गौशाला, तिल्दा",
     status: "assigned",
-    actionTaken: "जिला नोडल टीम असाइन"
+    actionTaken: "जिला नोडल टीम असाइन",
+    actionTakenHi: "जिला नोडल टीम असाइन",
+    actionTakenEn: "Assigned to District Nodal Team"
   }
 ];
 
 export const RFID_GATE_LOGS = [
-  { id: "LOG-01", time: "17:51:24", tag: "IN9820-1187", direction: "IN", cowName: "गौरी (गीर)", gate: "Gate-01 (South)", status: "verified", confidence: 99.1 },
-  { id: "LOG-02", time: "17:48:02", tag: "IN9820-4471", direction: "IN", cowName: "सुरभि (साहीवाल)", gate: "Gate-01 (South)", status: "verified", confidence: 98.4 },
-  { id: "LOG-03", time: "17:35:10", tag: "IN9820-3320", direction: "IN", cowName: "नन्दिनी (देसी)", gate: "Gate-01 (South)", status: "verified", confidence: 97.8 },
-  { id: "LOG-04", time: "06:43:18", tag: "IN9820-1187", direction: "OUT", cowName: "गौरी (गीर)", gate: "Gate-02 (Pasture)", status: "verified", confidence: 99.4 },
-  { id: "LOG-05", time: "06:43:02", tag: "IN9820-2290", direction: "OUT", cowName: "लक्ष्मी (देसी)", gate: "Gate-02 (Pasture)", status: "missing", confidence: 98.2 },
-  { id: "LOG-06", time: "06:42:15", tag: "IN9820-4471", direction: "OUT", cowName: "सुरभि (साहीवाल)", gate: "Gate-02 (Pasture)", status: "verified", confidence: 99.0 },
+  { id: "LOG-01", time: "17:51:24", tag: "IN9820-1187", direction: "IN", cowName: "गौरी (गीर)", cowNameHi: "गौरी (गीर)", cowNameEn: "Gauri (Gir)", gate: "Gate-01 (South)", status: "verified", confidence: 99.1 },
+  { id: "LOG-02", time: "17:48:02", tag: "IN9820-4471", direction: "IN", cowName: "सुरभि (साहीवाल)", cowNameHi: "सुरभि (साहीवाल)", cowNameEn: "Surbhi (Sahiwal)", gate: "Gate-01 (South)", status: "verified", confidence: 98.4 },
+  { id: "LOG-03", time: "17:35:10", tag: "IN9820-3320", direction: "IN", cowName: "नन्दिनी (देसी)", cowNameHi: "नन्दिनी (देसी)", cowNameEn: "Nandini (Desi)", gate: "Gate-01 (South)", status: "verified", confidence: 97.8 },
+  { id: "LOG-04", time: "06:43:18", tag: "IN9820-1187", direction: "OUT", cowName: "गौरी (गीर)", cowNameHi: "गौरी (गीर)", cowNameEn: "Gauri (Gir)", gate: "Gate-02 (Pasture)", status: "verified", confidence: 99.4 },
+  { id: "LOG-05", time: "06:43:02", tag: "IN9820-2290", direction: "OUT", cowName: "लक्ष्मी (देसी)", cowNameHi: "लक्ष्मी (देसी)", cowNameEn: "Lakshmi (Desi)", gate: "Gate-02 (Pasture)", status: "missing", confidence: 98.2 },
+  { id: "LOG-06", time: "06:42:15", tag: "IN9820-4471", direction: "OUT", cowName: "सुरभि (साहीवाल)", cowNameHi: "सुरभि (साहीवाल)", cowNameEn: "Surbhi (Sahiwal)", gate: "Gate-02 (Pasture)", status: "verified", confidence: 99.0 },
 ];
 
 export const VET_HEALTH_RECORDS = [
-  { id: "VET-01", tag: "IN9820-4471", breed: "साहीवाल", cowName: "सुरभि", condition: "लंगड़ापन (Lameness)", vet: "डॉ. ए. के. मिश्रा (B.V.Sc)", status: "उपचाराधीन", date: "2026-10-02", shed: "Shed-C", dosage: "Meloxicam + B-Complex", severity: "high" },
-  { id: "VET-02", tag: "IN9820-3320", breed: "देसी", cowName: "नन्दिनी", condition: "हल्का बुखार एवं भूख की कमी", vet: "डॉ. ए. के. मिश्रा (B.V.Sc)", status: "निगरानी", date: "2026-10-03", shed: "Shed-A", dosage: "Paracetamol bolus", severity: "medium" },
-  { id: "VET-03", tag: "IN9820-5512", breed: "गीर", cowName: "राधा", condition: "FMD नियमित टीकाकरण पूर्ण", vet: "डॉ. वी. के. पटेल", status: "स्वस्थ", date: "2026-09-28", shed: "Shed-B", dosage: "Raksha Ovac 2ml", severity: "low" },
-  { id: "VET-04", tag: "IN9820-8809", breed: "थारपारकर", cowName: "गंगा", condition: "गर्भावस्था 7वाँ माह सामान्य", vet: "डॉ. वी. के. पटेल", status: "विशेष आहार", date: "2026-10-01", shed: "Shed-Maternity", dosage: "Mineral Mixture + Calup", severity: "low" }
+  { id: "VET-01", tag: "IN9820-4471", breed: "साहीवाल", breedHi: "साहीवाल", breedEn: "Sahiwal", cowName: "सुरभि", cowNameHi: "सुरभि", cowNameEn: "Surbhi", condition: "लंगड़ापन (Lameness)", conditionHi: "लंगड़ापन (Lameness)", conditionEn: "Lameness (Joint Swelling)", vet: "डॉ. ए. के. मिश्रा (B.V.Sc)", vetHi: "डॉ. ए. के. मिश्रा (B.V.Sc)", vetEn: "Dr. A. K. Mishra (B.V.Sc)", status: "उपचाराधीन", date: "2026-10-02", shed: "Shed-C", dosage: "Meloxicam + B-Complex", dosageHi: "Meloxicam + B-Complex", dosageEn: "Meloxicam + B-Complex", severity: "high" },
+  { id: "VET-02", tag: "IN9820-3320", breed: "देसी", breedHi: "देसी", breedEn: "Indigenous (Desi)", cowName: "नन्दिनी", cowNameHi: "नन्दिनी", cowNameEn: "Nandini", condition: "हल्का बुखार एवं भूख की कमी", conditionHi: "हल्का बुखार एवं भूख की कमी", conditionEn: "Mild fever & anorexia", vet: "डॉ. ए. के. मिश्रा (B.V.Sc)", vetHi: "डॉ. ए. के. मिश्रा (B.V.Sc)", vetEn: "Dr. A. K. Mishra (B.V.Sc)", status: "निगरानी", date: "2026-10-03", shed: "Shed-A", dosage: "Paracetamol bolus", dosageHi: "Paracetamol bolus", dosageEn: "Paracetamol bolus", severity: "medium" },
+  { id: "VET-03", tag: "IN9820-5512", breed: "गीर", breedHi: "गीर", breedEn: "Gir", cowName: "राधा", cowNameHi: "राधा", cowNameEn: "Radha", condition: "FMD नियमित टीकाकरण पूर्ण", conditionHi: "FMD नियमित टीकाकरण पूर्ण", conditionEn: "Routine FMD Vaccination Completed", vet: "डॉ. वी. के. पटेल", vetHi: "डॉ. वी. के. पटेल", vetEn: "Dr. V. K. Patel", status: "स्वस्थ", date: "2026-09-28", shed: "Shed-B", dosage: "Raksha Ovac 2ml", dosageHi: "Raksha Ovac 2ml", dosageEn: "Raksha Ovac 2ml", severity: "low" },
+  { id: "VET-04", tag: "IN9820-8809", breed: "थारपारकर", breedHi: "थारपारकर", breedEn: "Tharparkar", cowName: "गंगा", cowNameHi: "गंगा", cowNameEn: "Ganga", condition: "गर्भावस्था 7वाँ माह सामान्य", conditionHi: "गर्भावस्था 7वाँ माह सामान्य", conditionEn: "Pregnancy 7th month routine check", vet: "डॉ. वी. के. पटेल", vetHi: "डॉ. वी. के. पटेल", vetEn: "Dr. V. K. Patel", status: "विशेष आहार", date: "2026-10-01", shed: "Shed-Maternity", dosage: "Mineral Mixture + Calup", dosageHi: "Mineral Mixture + Calup", dosageEn: "Mineral Mixture + Calup", severity: "low" }
 ];
 
 export const WEIGHBRIDGE_LOGS = [
-  { id: "WB-901", vehicleNo: "CG 04 AB 2381", driver: "मुकेश यादव", item: "हरा चारा (नेपियर घास)", grossWt: 8420, tareWt: 5180, netWt: 3240, billWt: 3240, diff: 0, status: "matched", time: "10:15 AM", vendor: "छत्तीसगढ़ चारा सहकारी समिति" },
-  { id: "WB-900", vehicleNo: "CG 07 C 1145", driver: "संतोष साहू", item: "सूखा चारा (पैरा)", grossWt: 7100, tareWt: 4950, netWt: 2150, billWt: 2200, diff: -50, status: "warn", time: "08:30 AM", vendor: "कृषि उपज मंडी, आरंग" },
-  { id: "WB-899", vehicleNo: "CG 04 M 8892", driver: "राजेश वर्मा", item: "दाना (संतुलित पशु आहार)", grossWt: 6500, tareWt: 5100, netWt: 1400, billWt: 1400, diff: 0, status: "matched", time: "कल शाम", vendor: "कामधेनु फीड्स प्रा. लि." }
+  { id: "WB-901", vehicleNo: "CG 04 AB 2381", driver: "मुकेश यादव", driverHi: "मुकेश यादव", driverEn: "Mukesh Yadav", item: "हरा चारा (नेपियर घास)", itemHi: "हरा चारा (नेपियर घास)", itemEn: "Green Fodder (Napier)", grossWt: 8420, tareWt: 5180, netWt: 3240, billWt: 3240, diff: 0, status: "matched", time: "10:15 AM", vendor: "छत्तीसगढ़ चारा सहकारी समिति", vendorHi: "छत्तीसगढ़ चारा सहकारी समिति", vendorEn: "CG Fodder Cooperative Society" },
+  { id: "WB-900", vehicleNo: "CG 07 C 1145", driver: "संतोष साहू", driverHi: "संतोष साहू", driverEn: "Santosh Sahu", item: "सूखा चारा (पैरा)", itemHi: "सूखा चारा (पैरा)", itemEn: "Dry Fodder (Straw)", grossWt: 7100, tareWt: 4950, netWt: 2150, billWt: 2200, diff: -50, status: "warn", time: "08:30 AM", vendor: "कृषि उपज मंडी, आरंग", vendorHi: "कृषि उपज मंडी, आरंग", vendorEn: "Krishi Upaj Mandi, Arang" },
+  { id: "WB-899", vehicleNo: "CG 04 M 8892", driver: "राजेश वर्मा", driverHi: "राजेश वर्मा", driverEn: "Rajesh Verma", item: "दाना (संतुलित पशु आहार)", itemHi: "दाना (संतुलित पशु आहार)", itemEn: "Cattle Feed Concentrate", grossWt: 6500, tareWt: 5100, netWt: 1400, billWt: 1400, diff: 0, status: "matched", time: "कल शाम", vendor: "कामधेनु फीड्स प्रा. लि.", vendorHi: "कामधेनु फीड्स प्रा. लि.", vendorEn: "Kamdhenu Feeds Pvt Ltd" }
 ];
 
 export const ADOPTION_CANDIDATES = [
