@@ -17,7 +17,7 @@ export default function Header({
   const [showNotifDrawer, setShowNotifDrawer] = useState(false);
   const [unreadCount, setUnreadCount] = useState(alerts.length);
 
-  const { language, toggleLanguage, t } = useLanguage();
+  const { language, setLanguage, toggleLanguage, isHi, t } = useLanguage();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -39,16 +39,18 @@ export default function Header({
       <header className="portal-header">
         {/* Brand identity */}
         <div className="brand-section">
-          <img src="/cg_gov_logo.jpg" alt="Gov Logo" className="w-10 h-10 object-contain rounded-full shadow-sm" />
+          <div className="ashoka-emblem" title="छत्तीसगढ़ शासन / Government of India">
+            🏛️
+          </div>
           <div className="brand-titles">
             <h1>
               <span>AI Gaushala Portal</span>
               <span className="highlight">(SGMS)</span>
             </h1>
             <div className="brand-subtitle">
-              <span>गौशाला शासन एवं अनुदान पारदर्शिता पोर्टल</span>
+              <span>{isHi ? 'गौशाला शासन एवं अनुदान पारदर्शिता पोर्टल' : 'Gaushala Governance & Grant Transparency Portal'}</span>
               <span>•</span>
-              <span>पशुपालन एवं गो-सेवा आयोग</span>
+              <span>{isHi ? 'पशुपालन एवं गो-सेवा आयोग' : 'Animal Husbandry & Gau-Seva Commission'}</span>
             </div>
           </div>
         </div>
@@ -58,7 +60,7 @@ export default function Header({
           <button
             className={`role-btn ${role === 'admin' ? 'active' : ''}`}
             onClick={() => onRoleChange('admin')}
-            title="State Super Administrator"
+            title={isHi ? "राज्य नियंत्रक (Super Admin)" : "State Super Administrator"}
           >
             <span>👑</span>
             <span>{t('admin')}</span>
@@ -66,7 +68,7 @@ export default function Header({
           <button
             className={`role-btn ${role === 'sub' ? 'active' : ''}`}
             onClick={() => onRoleChange('sub')}
-            title="District / Zonal Officer"
+            title={isHi ? "ज़िला / ज़ोन नोडल अधिकारी" : "District / Zonal Officer"}
           >
             <span>🧑‍💼</span>
             <span>{t('sub')}</span>
@@ -74,7 +76,7 @@ export default function Header({
           <button
             className={`role-btn ${role === 'mgr' ? 'active' : ''}`}
             onClick={() => onRoleChange('mgr')}
-            title="Gaushala Ground Manager"
+            title={isHi ? "गौशाला प्रबंधक" : "Gaushala Ground Manager"}
           >
             <span>🐄</span>
             <span>{t('mgr')}</span>
@@ -84,8 +86,8 @@ export default function Header({
         {/* Action Controls */}
         <div className="header-actions">
           {/* Live IST Clock */}
-          <div className="live-ist-clock" title="भारतीय मानक समय (IST)">
-            <span>{time.toLocaleDateString('hi-IN', { weekday: 'short', day: '2-digit', month: 'short' })}</span>
+          <div className="live-ist-clock" title={isHi ? "भारतीय मानक समय (IST)" : "Indian Standard Time (IST)"}>
+            <span>{time.toLocaleDateString(isHi ? 'hi-IN' : 'en-IN', { weekday: 'short', day: '2-digit', month: 'short' })}</span>
             <b>{time.toLocaleTimeString('en-IN')} IST</b>
           </div>
 
@@ -93,7 +95,7 @@ export default function Header({
           <button
             className="icon-action-btn"
             onClick={onSoundToggle}
-            title={soundEnabled ? "ध्वनि चालू (Audio On)" : "ध्वनि म्यूट (Audio Muted)"}
+            title={soundEnabled ? (isHi ? "ध्वनि चालू (Audio On)" : "Audio On") : (isHi ? "ध्वनि म्यूट (Audio Muted)" : "Audio Muted")}
             aria-label="Toggle Sound"
           >
             {soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} style={{ opacity: 0.6 }} />}
@@ -103,28 +105,40 @@ export default function Header({
           <button
             className="icon-action-btn"
             onClick={handleNotifClick}
-            title="अलर्ट एवं सूचनाएँ"
+            title={isHi ? "अलर्ट एवं सूचनाएँ" : "Alerts & Notifications"}
             aria-label="Notifications"
           >
             <Bell size={18} />
             {unreadCount > 0 && <span className="badge-counter">{unreadCount}</span>}
           </button>
 
-          {/* Language Switcher */}
-          <button
-            className="icon-action-btn"
-            onClick={toggleLanguage}
-            title={language === 'hi' ? "Switch to English" : "हिंदी में बदलें"}
-            style={{ fontWeight: 'bold', fontSize: '0.85rem' }}
-          >
-            {language === 'hi' ? 'EN' : 'HI'}
-          </button>
+          {/* Dual Language Option: Hindi & English */}
+          <div className="language-selector" role="group" aria-label="Language selection / भाषा चयन">
+            <Globe size={15} className="lang-icon" />
+            <button
+              type="button"
+              className={`lang-option-btn ${isHi ? 'active' : ''}`}
+              onClick={() => setLanguage('hi')}
+              title="हिंदी में देखें"
+            >
+              हिंदी
+            </button>
+            <span className="lang-divider">|</span>
+            <button
+              type="button"
+              className={`lang-option-btn ${!isHi ? 'active' : ''}`}
+              onClick={() => setLanguage('en')}
+              title="View in English"
+            >
+              English
+            </button>
+          </div>
 
           {/* Theme Switcher */}
           <button
             className="icon-action-btn"
             onClick={onThemeToggle}
-            title={theme === 'dark' ? "लाइट थीम (Light Mode)" : "डार्क थीम (Dark Mode)"}
+            title={theme === 'dark' ? (isHi ? "लाइट थीम (Light Mode)" : "Light Mode") : (isHi ? "डार्क थीम (Dark Mode)" : "Dark Mode")}
             aria-label="Toggle Theme"
           >
             {theme === 'dark' ? <Sun size={18} color="#f59e0b" /> : <Moon size={18} />}
@@ -137,13 +151,13 @@ export default function Header({
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
               <b style={{ fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <Bell size={16} color="var(--saffron)" />
-                लाइव अलर्ट केंद्र ({alerts.length})
+                {isHi ? `लाइव अलर्ट केंद्र (${alerts.length})` : `Live Alert Center (${alerts.length})`}
               </b>
               <button
                 className="btn-gov outline btn-sm"
                 onClick={() => setShowNotifDrawer(false)}
               >
-                बंद करें
+                {isHi ? 'बंद करें' : 'Close'}
               </button>
             </div>
             <div className="alert-feed-list" style={{ maxHeight: '380px', overflowY: 'auto' }}>
@@ -157,9 +171,11 @@ export default function Header({
                     setShowNotifDrawer(false);
                   }}
                 >
-                  <div className="alert-feed-title">{al.title}</div>
+                  <div className="alert-feed-title">
+                    {isHi ? (al.titleHi || al.title) : (al.titleEn || al.title)}
+                  </div>
                   <div className="alert-feed-meta">
-                    {al.desc} • <b>{al.time}</b>
+                    {isHi ? (al.descHi || al.desc) : (al.descEn || al.desc)} • <b>{al.time}</b>
                   </div>
                 </div>
               ))}

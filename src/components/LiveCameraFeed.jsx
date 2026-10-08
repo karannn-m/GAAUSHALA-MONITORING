@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Camera, Eye, AlertCircle, Maximize2, ShieldAlert, Sparkles, CheckCircle2 } from 'lucide-react';
 import { playAlertWarningSound, toggleSirenSound } from '../sound';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function LiveCameraFeed({
   title,
@@ -14,6 +15,7 @@ export default function LiveCameraFeed({
   alertButtonType = 'crimson',
   bgType = 'shed', // 'shed', 'trough', 'pasture', 'gate', 'night'
 }) {
+  const { isHi } = useLanguage();
   const [timestamp, setTimestamp] = useState(new Date());
   const [flash, setFlash] = useState(false);
 
@@ -29,7 +31,7 @@ export default function LiveCameraFeed({
       onSnapshot({
         title,
         cameraCode,
-        timestamp: timestamp.toLocaleString('hi-IN'),
+        timestamp: timestamp.toLocaleString(isHi ? 'hi-IN' : 'en-US'),
         boxes
       });
     }
@@ -66,10 +68,10 @@ export default function LiveCameraFeed({
           <button
             className="btn-gov outline btn-sm"
             onClick={handleCapture}
-            title="Snapshot Capture"
+            title={isHi ? "फ़ोटो कैप्चर (Snapshot)" : "Capture Snapshot"}
             style={{ padding: '3px 8px' }}
           >
-            📸 कैप्चर
+            📸 {isHi ? 'कैप्चर' : 'Capture'}
           </button>
         </div>
       </div>

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { MapPin, Navigation, Eye, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function GISMap({ gaushalas, selectedId, onSelectGaushala }) {
+  const { isHi } = useLanguage();
   const [filter, setFilter] = useState('all');
 
   const filteredList = gaushalas.filter((g) => {
@@ -24,10 +26,10 @@ export default function GISMap({ gaushalas, selectedId, onSelectGaushala }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
         <div style={{ display: 'flex', gap: 6 }}>
           {[
-            { id: 'all', label: 'सभी (6)' },
-            { id: 'ok', label: '🟢 सामान्य (4)' },
-            { id: 'warn', label: '🟠 चेतावनी (1)' },
-            { id: 'bad', label: '🔴 गंभीर (1)' }
+            { id: 'all', label: isHi ? 'सभी (6)' : 'All (6)' },
+            { id: 'ok', label: isHi ? '🟢 सामान्य (4)' : '🟢 Normal (4)' },
+            { id: 'warn', label: isHi ? '🟠 चेतावनी (1)' : '🟠 Warning (1)' },
+            { id: 'bad', label: isHi ? '🔴 गंभीर (1)' : '🔴 Critical (1)' }
           ].map((btn) => (
             <button
               key={btn.id}
@@ -39,7 +41,7 @@ export default function GISMap({ gaushalas, selectedId, onSelectGaushala }) {
           ))}
         </div>
         <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
-          * बिंदु पर क्लिक करके लाइव डेटा देखें
+          {isHi ? '* बिंदु पर क्लिक करके लाइव डेटा देखें' : '* Click pin to inspect live telemetry'}
         </span>
       </div>
 
@@ -49,7 +51,7 @@ export default function GISMap({ gaushalas, selectedId, onSelectGaushala }) {
           viewBox="0 0 440 390"
           style={{ width: '100%', height: 'auto', maxHeight: '360px' }}
           role="img"
-          aria-label="छत्तीसगढ़ राज्य गो-सेवा GIS मानचित्र"
+          aria-label={isHi ? "छत्तीसगढ़ राज्य गो-सेवा GIS मानचित्र" : "Chhattisgarh State Cattle Care GIS Map"}
         >
           {/* State Boundary Outline (Chhattisgarh Geo-shape) */}
           <path
@@ -80,10 +82,18 @@ export default function GISMap({ gaushalas, selectedId, onSelectGaushala }) {
           <path d="M 140 240 Q 220 270 290 320" stroke="var(--border-color)" strokeWidth="1.5" fill="none" strokeDasharray="3 3" />
 
           {/* District Labels */}
-          <text x="210" y="70" fill="var(--text-muted)" fontSize="11" fontWeight="600" textAnchor="middle">बिलासपुर ज़ोन</text>
-          <text x="200" y="165" fill="var(--text-muted)" fontSize="11" fontWeight="600" textAnchor="middle">रायपुर संभाग</text>
-          <text x="125" y="200" fill="var(--text-muted)" fontSize="10" fontWeight="600" textAnchor="middle">दुर्ग ज़ोन</text>
-          <text x="200" y="325" fill="var(--text-muted)" fontSize="11" fontWeight="600" textAnchor="middle">बस्तर ज़ोन</text>
+          <text x="210" y="70" fill="var(--text-muted)" fontSize="11" fontWeight="600" textAnchor="middle">
+            {isHi ? 'बिलासपुर ज़ोन' : 'Bilaspur Zone'}
+          </text>
+          <text x="200" y="165" fill="var(--text-muted)" fontSize="11" fontWeight="600" textAnchor="middle">
+            {isHi ? 'रायपुर संभाग' : 'Raipur Division'}
+          </text>
+          <text x="125" y="200" fill="var(--text-muted)" fontSize="10" fontWeight="600" textAnchor="middle">
+            {isHi ? 'दुर्ग ज़ोन' : 'Durg Zone'}
+          </text>
+          <text x="200" y="325" fill="var(--text-muted)" fontSize="11" fontWeight="600" textAnchor="middle">
+            {isHi ? 'बस्तर ज़ोन' : 'Bastar Zone'}
+          </text>
 
           {/* Gaushala Pins */}
           {filteredList.map((item, idx) => {
@@ -167,7 +177,7 @@ export default function GISMap({ gaushalas, selectedId, onSelectGaushala }) {
                       fontWeight="600"
                       textAnchor="middle"
                     >
-                      {item.ver}/{item.reg} AI Verified
+                      {item.ver}/{item.reg} {isHi ? 'AI सत्यापित' : 'AI Verified'}
                     </text>
                   </g>
                 )}
@@ -180,15 +190,15 @@ export default function GISMap({ gaushalas, selectedId, onSelectGaushala }) {
         <div style={{ display: 'flex', gap: 16, marginTop: 8, fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#16a34a' }} />
-            सत्यापित (OK)
+            {isHi ? 'सत्यापित (OK)' : 'Verified (OK)'}
           </span>
           <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#d97706' }} />
-            चेतावनी (Stock/Feed)
+            {isHi ? 'चेतावनी (Stock/Feed)' : 'Warning (Stock/Feed)'}
           </span>
           <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#dc2626' }} />
-            गंभीर (Audit Mismatch)
+            {isHi ? 'गंभीर (Audit Mismatch)' : 'Critical (Audit Mismatch)'}
           </span>
         </div>
       </div>

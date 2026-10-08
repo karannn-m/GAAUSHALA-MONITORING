@@ -1,19 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Users, UserPlus, Phone, Shield, MapPin } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function AdminSubAdmins({ subAdmins, onOpenAddModal }) {
+  const { isHi } = useLanguage();
+
   return (
     <div>
       <div className="page-header-banner">
         <div>
-          <h2 className="page-title">उप-प्रशासक एवं नोडल अधिकारी प्रबंधन (Zonal Officers)</h2>
+          <h2 className="page-title">
+            {isHi
+              ? 'उप-प्रशासक एवं नोडल अधिकारी प्रबंधन (Zonal Officers)'
+              : 'Sub-Admin & Zonal Nodal Officers'}
+          </h2>
           <p className="page-desc">
-            ज़ोन/जिला स्तर पर अधिकार नियंत्रित करें, औचक निरीक्षण टीमें गठित करें
+            {isHi
+              ? 'ज़ोन/जिला स्तर पर अधिकार नियंत्रित करें, औचक निरीक्षण टीमें गठित करें'
+              : 'Manage zonal authority, audit quotas, and dispatch surprise inspection teams'}
           </p>
         </div>
         <button className="btn-gov saffron" onClick={onOpenAddModal}>
           <UserPlus size={16} />
-          नया उप-प्रशासक जोड़ें
+          {isHi ? 'नया उप-प्रशासक जोड़ें' : 'Add New Sub-Admin'}
         </button>
       </div>
 
@@ -21,7 +30,9 @@ export default function AdminSubAdmins({ subAdmins, onOpenAddModal }) {
         <div className="card-title-row">
           <h3>
             <Users size={18} color="var(--saffron)" />
-            सक्रिय ज़ोनल नोडल अधिकारी ({subAdmins.length})
+            {isHi
+              ? `सक्रिय ज़ोनल नोडल अधिकारी (${subAdmins.length})`
+              : `Active Zonal Nodal Officers (${subAdmins.length})`}
           </h3>
         </div>
 
@@ -29,15 +40,15 @@ export default function AdminSubAdmins({ subAdmins, onOpenAddModal }) {
           <table className="gov-table">
             <thead>
               <tr>
-                <th>आईडी</th>
-                <th>अधिकारी का नाम</th>
-                <th>पदनाम</th>
-                <th>संबंधित ज़ोन</th>
-                <th>संपर्क नंबर</th>
-                <th>संबद्ध गौशालाएँ</th>
-                <th>लंबित निरीक्षण</th>
-                <th>सक्रिय मामले</th>
-                <th>कार्यवाही</th>
+                <th>{isHi ? 'आईडी' : 'ID'}</th>
+                <th>{isHi ? 'अधिकारी का नाम' : 'Officer Name'}</th>
+                <th>{isHi ? 'पदनाम' : 'Designation'}</th>
+                <th>{isHi ? 'संबंधित ज़ोन' : 'Assigned Zone'}</th>
+                <th>{isHi ? 'संपर्क नंबर' : 'Phone'}</th>
+                <th>{isHi ? 'संबद्ध गौशालाएँ' : 'Mapped Gaushalas'}</th>
+                <th>{isHi ? 'लंबित निरीक्षण' : 'Pending Audits'}</th>
+                <th>{isHi ? 'सक्रिय मामले' : 'Active Cases'}</th>
+                <th>{isHi ? 'कार्यवाही' : 'Action'}</th>
               </tr>
             </thead>
             <tbody>
@@ -55,19 +66,25 @@ export default function AdminSubAdmins({ subAdmins, onOpenAddModal }) {
                       {sub.phone}
                     </span>
                   </td>
-                  <td><b>{sub.gaushalaCount} गौशालाएँ</b></td>
+                  <td><b>{sub.gaushalaCount} {isHi ? 'गौशालाएँ' : 'Shelters'}</b></td>
                   <td>
                     <span className={`status-badge ${sub.pendingAudits > 0 ? 'warn' : 'ok'}`}>
-                      {sub.pendingAudits} लंबित
+                      {sub.pendingAudits} {isHi ? 'लंबित' : 'Pending'}
                     </span>
                   </td>
                   <td><b>{sub.activeCases}</b></td>
                   <td>
                     <button
                       className="btn-gov outline btn-sm"
-                      onClick={() => alert(`${sub.name} (${sub.zone}) को सतर्कता निर्देश प्रेषित किए गए`)}
+                      onClick={() =>
+                        alert(
+                          isHi
+                            ? `${sub.name} (${sub.zone}) को सतर्कता निर्देश प्रेषित किए गए`
+                            : `Vigilance directives dispatched to ${sub.name} (${sub.zone})`
+                        )
+                      }
                     >
-                      निर्देश भेजें
+                      {isHi ? 'निर्देश भेजें' : 'Send Directives'}
                     </button>
                   </td>
                 </tr>

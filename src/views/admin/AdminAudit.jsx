@@ -1,14 +1,21 @@
 import React from 'react';
 import { ShieldCheck, AlertTriangle, FileText, CheckCircle2, XCircle, Truck, Camera } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function AdminAudit({ gaushalas, onOpenAuditModal }) {
+  const { isHi } = useLanguage();
+
   return (
     <div>
       <div className="page-header-banner">
         <div>
-          <h2 className="page-title">AI स्वचालित ऑडिट एवं सतर्कता (Automated AI Audit)</h2>
+          <h2 className="page-title">
+            {isHi ? 'AI स्वचालित ऑडिट एवं सतर्कता (Automated AI Audit)' : 'Automated AI Audit & Compliance'}
+          </h2>
           <p className="page-desc">
-            Ghost Cattle, चारा खपत, धर्मकाँटा तौल-पर्ची एवं ANPR वाहन कैमरों का 100% स्वचालित मिलान
+            {isHi
+              ? 'Ghost Cattle, चारा खपत, धर्मकाँटा तौल-पर्ची एवं ANPR वाहन कैमरों का 100% स्वचालित मिलान'
+              : 'Automated 100% cross-validation for ghost cattle, fodder usage, weighbridge slips & ANPR vehicle cameras'}
           </p>
         </div>
       </div>
@@ -26,20 +33,24 @@ export default function AdminAudit({ gaushalas, onOpenAuditModal }) {
                 <div>
                   <h3 style={{ margin: 0 }}>{item.name}</h3>
                   <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                    कोड: {item.id} • {item.district}
+                    {isHi ? 'कोड' : 'Code'}: {item.id} • {item.district}
                   </span>
                 </div>
                 <span className={`status-badge ${item.status}`}>
-                  {item.status === 'ok' ? 'ऑडिट पास (94%)' : item.status === 'warn' ? 'समीक्षाधीन' : 'गंभीर विचलन'}
+                  {item.status === 'ok'
+                    ? (isHi ? 'ऑडिट पास (94%)' : 'Audit Passed (94%)')
+                    : item.status === 'warn'
+                    ? (isHi ? 'समीक्षाधीन' : 'Under Review')
+                    : (isHi ? 'गंभीर विचलन' : 'Severe Discrepancy')}
                 </span>
               </div>
 
               {/* Headcount match meter */}
               <div style={{ marginBottom: 14 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: 4 }}>
-                  <span>AI Headcount मिलान:</span>
+                  <span>{isHi ? 'AI Headcount मिलान:' : 'AI Headcount Match:'}</span>
                   <b style={{ color: hasGhostCattleRisk ? 'var(--red-alert)' : 'var(--emerald)' }}>
-                    {item.ver} / {item.reg} गायें ({100 - diffPct}%)
+                    {item.ver} / {item.reg} {isHi ? 'गायें' : 'cattle'} ({100 - diffPct}%)
                   </b>
                 </div>
                 <div className="stock-bar-track">
@@ -58,27 +69,29 @@ export default function AdminAudit({ gaushalas, onOpenAuditModal }) {
                 <div className="stock-bar-row" style={{ padding: '6px 0' }}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <Truck size={14} color="var(--saffron)" />
-                    चारा बिल बनाम तौल पर्ची (धर्मकाँटा):
+                    {isHi ? 'चारा बिल बनाम तौल पर्ची (धर्मकाँटा):' : 'Fodder Bill vs Weighbridge Slip:'}
                   </span>
                   <b style={{ color: item.status === 'bad' ? 'var(--red-alert)' : 'var(--emerald)' }}>
-                    {item.status === 'bad' ? '18% वजन अंतर (संदेहास्पद)' : '100% पर्ची मिलान ✓'}
+                    {item.status === 'bad'
+                      ? (isHi ? '18% वजन अंतर (संदेहास्पद)' : '18% weight variance (suspicious)')
+                      : (isHi ? '100% पर्ची मिलान ✓' : '100% Slip Match ✓')}
                   </b>
                 </div>
 
                 <div className="stock-bar-row" style={{ padding: '6px 0' }}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <Camera size={14} color="var(--emerald)" />
-                    ANPR वाहन नंबर प्लेट CCTV मिलान:
+                    {isHi ? 'ANPR वाहन नंबर प्लेट CCTV मिलान:' : 'ANPR Vehicle Plate CCTV Match:'}
                   </span>
                   <b style={{ color: 'var(--emerald)' }}>
-                    CG 04 AB 2381 ✓ सत्यापित
+                    CG 04 AB 2381 ✓ {isHi ? 'सत्यापित' : 'Verified'}
                   </b>
                 </div>
 
                 <div className="stock-bar-row" style={{ padding: '6px 0' }}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <ShieldCheck size={14} color="#0284c7" />
-                    RFID इयर-टैग सक्रियता:
+                    {isHi ? 'RFID इयर-टैग सक्रियता:' : 'RFID Ear-Tag Active Rate:'}
                   </span>
                   <b>{item.rfidCoverage || '98.5%'}</b>
                 </div>
@@ -90,7 +103,7 @@ export default function AdminAudit({ gaushalas, onOpenAuditModal }) {
                   onClick={() => onOpenAuditModal(item)}
                 >
                   <FileText size={14} />
-                  पूर्ण AI ऑडिट रिपोर्ट देखें / PDF प्रिंट
+                  {isHi ? 'पूर्ण AI ऑडिट रिपोर्ट देखें / PDF प्रिंट' : 'View Full AI Audit Report / PDF Print'}
                 </button>
               </div>
             </div>
