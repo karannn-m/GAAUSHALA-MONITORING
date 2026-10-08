@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Wheat, Truck, PlusCircle, MinusCircle, CheckCircle2, Scale } from 'lucide-react';
-import { playSuccessSound } from '../../sound';
+import { Wheat, Truck, PlusCircle, MinusCircle, CheckCircle2, Scale, Loader2 } from 'lucide-react';
+import { playSuccessSound, playAlertWarningSound } from '../../sound';
 import { WEIGHBRIDGE_LOGS } from '../../data/portalData';
 import { useLanguage } from '../../context/LanguageContext';
+import api from '../../utils/api';
 
 export default function ManagerFeedStock({
   stock,
@@ -12,6 +13,7 @@ export default function ManagerFeedStock({
 }) {
   const { isHi } = useLanguage();
   const [cowCount, setCowCount] = useState(204);
+  const [isDeducting, setIsDeducting] = useState(false);
 
   const greenPerCow = 15;
   const dryPerCow = 5;
@@ -27,8 +29,20 @@ export default function ManagerFeedStock({
     { key: 'dana', label: isHi ? 'संतुलित दाना' : 'Concentrate Feed', max: 600, val: stock.dana },
   ];
 
-  const handleDeduct = () => {
-    onDeductStock(cowCount);
+  const handleDeduct = async () => {
+    setIsDeducting(true);
+    try {
+      const response = await api.post('/api/manager/feed/consume', { cows_count: cowCount });
+      // If we had the new state from backend, we could sync it. For now, trigger UI update.
+      onDeductStock(cowCount);
+      playSuccessSound();
+      onShowToast(isHi ? `✓ ${cowCount} गायों के राशन की डेटाबेस में प्रविष्टि सफल रही` : `✓ Ration deduction logged for ${cowCount} cattle in database`);
+    } catch (e) {
+      playAlertWarningSound();
+      onShowToast(isHi ? 'राशन डेटाबेस में सहेजने में विफल' : 'Failed to save ration to database');
+    } finally {
+      setIsDeducting(false);
+    }
   };
 
   const handleAddTruckStock = () => {
@@ -103,8 +117,8 @@ export default function ManagerFeedStock({
             </div>
           </div>
 
-          <button className="btn-gov emerald" onClick={handleDeduct} style={{ width: '100%', justifyContent: 'center' }}>
-            <MinusCircle size={16} />
+          <button className="btn-gov emerald" onClick={handleDeduct} disabled={isDeducting} style={{ width: '100%', justifyContent: 'center' }}>
+            {isDeducting ? <Loader2 className="animate-spin" size={16} /> : <MinusCircle size={16} />}
             {isHi
               ? `${cowCount} गायों के राशन की गोदाम स्टॉक से स्वतः कटौती करें`
               : `Auto-deduct ration for ${cowCount} cattle from godown stock`}

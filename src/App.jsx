@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
+
+// Auth View
+import Login from './views/auth/Login';
 
 // Admin Views
 import AdminDashboard from './views/admin/AdminDashboard';
@@ -76,8 +80,14 @@ const NEW_TICKER_ALERTS = [
 
 export default function App() {
   const { isHi } = useLanguage();
-  const [role, setRole] = useState('admin');
-  const [activeTab, setActiveTab] = useState('dash');
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Auth State
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user') || 'null'));
+  const [role, setRole] = useState(user?.role ? (user.role === 'ADMIN' ? 'admin' : (user.role === 'SUB_ADMIN' ? 'sub' : 'mgr')) : 'admin');
+  
   const [theme, setTheme] = useState('light');
   const [soundEnabled, setSoundEnabled] = useState(true);
 
@@ -116,17 +126,30 @@ export default function App() {
   const [addSubAdminModalOpen, setAddSubAdminModalOpen] = useState(false);
   const [addCowModalOpen, setAddCowModalOpen] = useState(false);
 
-  // Default tab switcher per role
+  // Sync auth state
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    setIsAuthenticated(!!token);
+    if (storedUser) {
+      setUser(storedUser);
+      setRole(storedUser.role === 'ADMIN' ? 'admin' : (storedUser.role === 'SUB_ADMIN' ? 'sub' : 'mgr'));
+    }
+  }, [location.pathname]);
+
   const handleRoleChange = (newRole) => {
     setRole(newRole);
-    if (newRole === 'admin') setActiveTab('dash');
-    else if (newRole === 'sub') setActiveTab('zone');
-    else if (newRole === 'mgr') setActiveTab('mdash');
+    if (newRole === 'admin') navigate('/admin/dashboard');
+    else if (newRole === 'sub') navigate('/sub/zone');
+    else if (newRole === 'mgr') navigate('/manager/dashboard');
   };
 
   // Background Live Alert simulation
   const tickerIdx = useRef(0);
   useEffect(() => {
+    // Fake AI Alert Simulation (Only runs if VITE_DEMO_MODE is true in .env)
+    if (import.meta.env.VITE_DEMO_MODE !== 'true') return;
+
     const interval = setInterval(() => {
       const template = NEW_TICKER_ALERTS[tickerIdx.current % NEW_TICKER_ALERTS.length];
       tickerIdx.current++;
@@ -162,11 +185,7 @@ export default function App() {
       sukha: Math.max(0, prev.sukha - cows * 5),
       dana: Math.max(0, prev.dana - cows * 1.5),
     }));
-    showToast(
-      isHi
-        ? `✓ ${cows} गायों के राशन अनुसार गोदाम स्टॉक से स्वतः कटौती की गई`
-        : `✓ Auto-deducted warehouse stock for ${cows} cows ration`
-    );
+    showToast(isHi ? `✓ ${cows} गायों के राशन अनुसार गोदाम स्टॉक से स्वतः कटौती की गई` : `✓ Auto-deducted warehouse stock for ${cows} cows ration`);
   };
 
   const handleAddStock = (itemKey, amount) => {
@@ -176,255 +195,85 @@ export default function App() {
     }));
   };
 
-  // Grant Approval Action
   const handleConfirmGrant = (index, status, txnId) => {
-    setGrants((prev) =>
-      prev.map((g, idx) =>
-        idx === index ? { ...g, st: status, txnId } : g
-      )
-    );
-    showToast(
-      status === 'स्वीकृत' || status === 'Approved'
-        ? (isHi ? `✓ DBT अनुदान स्वीकृत! सं. ${txnId || ''}` : `✓ DBT Grant Approved! Ref: ${txnId || ''}`)
-        : (isHi ? 'अनुदान रोका गया' : 'Grant Withheld')
-    );
+    setGrants((prev) => prev.map((g, idx) => idx === index ? { ...g, st: status, txnId } : g));
+    showToast(status === 'स्वीकृत' || status === 'Approved' ? (isHi ? `✓ DBT अनुदान स्वीकृत! सं. ${txnId || ''}` : `✓ DBT Grant Approved! Ref: ${txnId || ''}`) : (isHi ? 'अनुदान रोका गया' : 'Grant Withheld'));
   };
 
   const handleRejectGrant = (index) => {
-    setGrants((prev) =>
-      prev.map((g, idx) =>
-        idx === index ? { ...g, st: isHi ? 'रोका गया' : 'Held' } : g
-      )
-    );
-    showToast(
-      isHi
-        ? 'अनुदान रोका गया – भौतिक निरीक्षण अनुशंसित'
-        : 'Grant Withheld – On-site inspection recommended'
-    );
+    setGrants((prev) => prev.map((g, idx) => idx === index ? { ...g, st: isHi ? 'रोका गया' : 'Held' } : g));
+    showToast(isHi ? 'अनुदान रोका गया – भौतिक निरीक्षण अनुशंसित' : 'Grant Withheld – On-site inspection recommended');
   };
 
   return (
-    <div className="portal-container" data-theme={theme}>
-      {/* Header */}
-      <Header
-        role={role}
-        onRoleChange={handleRoleChange}
-        theme={theme}
-        onThemeToggle={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-        soundEnabled={soundEnabled}
-        onSoundToggle={() => {
-          const next = !soundEnabled;
-          setSoundEnabled(next);
-          showToast(
-            next
-              ? (isHi ? '🔊 ध्वनि चालू (Audio On)' : '🔊 Audio Enabled')
-              : (isHi ? '🔇 ध्वनि म्यूट (Audio Muted)' : '🔇 Audio Muted')
-          );
-        }}
-        alerts={alerts}
-        onAlertClick={(alertItem) => {
-          showToast(
-            isHi
-              ? `अलर्ट: ${alertItem.titleHi || alertItem.title}`
-              : `Alert: ${alertItem.titleEn || alertItem.title}`
-          );
-        }}
-      />
-
-      {/* Main Body */}
-      <div className="portal-body">
-        {/* Dynamic Sidebar */}
-        <Sidebar
-          role={role}
-          activeTab={activeTab}
-          onTabSelect={(tabId) => setActiveTab(tabId)}
-        />
-
-        {/* Dynamic Views based on Role and active Tab */}
-        <main className="portal-main">
-          {/* Admin Views */}
-          {role === 'admin' && activeTab === 'dash' && (
-            <AdminDashboard
-              gaushalas={gaushalas}
-              alerts={alerts}
-              onOpenAuditModal={(item) => setAuditModalData(item)}
-              onOpenGrantModal={(item) => setGrantModalItem(item)}
-              onNavigateTab={(tab) => setActiveTab(tab)}
-            />
-          )}
-          {role === 'admin' && activeTab === 'grants' && (
-            <AdminGrants
-              grants={grants}
-              onOpenGrantModal={(item) => setGrantModalItem(item)}
-              onRejectGrant={handleRejectGrant}
-            />
-          )}
-          {role === 'admin' && activeTab === 'audit' && (
-            <AdminAudit
-              gaushalas={gaushalas}
-              onOpenAuditModal={(item) => setAuditModalData(item)}
-            />
-          )}
-          {role === 'admin' && activeTab === 'sub' && (
-            <AdminSubAdmins
-              subAdmins={subAdmins}
-              onOpenAddModal={() => setAddSubAdminModalOpen(true)}
-            />
-          )}
-          {role === 'admin' && activeTab === 'policy' && (
-            <AdminPolicy onShowToast={showToast} />
-          )}
-          {role === 'admin' && activeTab === 'pub' && (
-            <AdminPublic
-              onOpenPhotoModal={(data) => setPhotoProofData(data)}
-              onShowToast={showToast}
-            />
-          )}
-          {role === 'admin' && activeTab === 'ai' && (
-            <AdvancedFeatures onShowToast={showToast} />
-          )}
-
-          {/* Sub-Admin Views */}
-          {role === 'sub' && activeTab === 'zone' && (
-            <SubZoneMonitor
-              gaushalas={gaushalas}
-              onOpenPhotoModal={(data) => setPhotoProofData(data)}
-              onShowToast={showToast}
-            />
-          )}
-          {role === 'sub' && activeTab === 'alerts' && (
-            <SubAlerts
-              alerts={alerts}
-              onShowToast={showToast}
-              onUpdateAlertStatus={(id, status, action) => {
-                setAlerts((prev) =>
-                  prev.map((a) =>
-                    a.id === id ? { ...a, status, actionTaken: action } : a
-                  )
-                );
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="*" element={
+        !isAuthenticated ? (
+          <Navigate to="/login" replace />
+        ) : (
+          <div className="portal-container" data-theme={theme}>
+            <Header
+              role={role}
+              onRoleChange={handleRoleChange}
+              theme={theme}
+              onThemeToggle={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              soundEnabled={soundEnabled}
+              onSoundToggle={() => {
+                const next = !soundEnabled;
+                setSoundEnabled(next);
+                showToast(next ? (isHi ? '🔊 ध्वनि चालू (Audio On)' : '🔊 Audio Enabled') : (isHi ? '🔇 ध्वनि म्यूट (Audio Muted)' : '🔇 Audio Muted'));
               }}
-            />
-          )}
-          {role === 'sub' && activeTab === 'verify' && (
-            <SubVerification
-              gaushalas={gaushalas}
-              onOpenPhotoModal={(data) => setPhotoProofData(data)}
-              onShowToast={showToast}
-            />
-          )}
-          {role === 'sub' && activeTab === 'zrep' && (
-            <SubZoneReports onShowToast={showToast} />
-          )}
-
-          {/* Gaushala Manager Views */}
-          {role === 'mgr' && activeTab === 'mdash' && (
-            <ManagerDashboard
               alerts={alerts}
-              stock={stock}
-              onNavigateTab={(tab) => setActiveTab(tab)}
-              onOpenAddCowModal={() => setAddCowModalOpen(true)}
+              onAlertClick={(alertItem) => showToast(isHi ? `अलर्ट: ${alertItem.titleHi || alertItem.title}` : `Alert: ${alertItem.titleEn || alertItem.title}`)}
             />
-          )}
-          {role === 'mgr' && activeTab === 'cctv' && (
-            <ManagerCCTV
-              onOpenPhotoModal={(data) => setPhotoProofData(data)}
-              onShowToast={showToast}
-            />
-          )}
-          {role === 'mgr' && activeTab === 'gate' && (
-            <ManagerGateRFID
-              onOpenPhotoModal={(data) => setPhotoProofData(data)}
-              onShowToast={showToast}
-            />
-          )}
-          {role === 'mgr' && activeTab === 'feed' && (
-            <ManagerFeedStock
-              stock={stock}
-              onDeductStock={handleDeductStock}
-              onAddStock={handleAddStock}
-              onShowToast={showToast}
-            />
-          )}
-          {role === 'mgr' && activeTab === 'health' && (
-            <ManagerHealth
-              healthRecords={healthRecords}
-              onOpenAddHealthModal={() => setAddHealthModalOpen(true)}
-            />
-          )}
-          {role === 'mgr' && activeTab === 'perim' && (
-            <ManagerPerimeter onShowToast={showToast} />
-          )}
-        </main>
-      </div>
 
-      {/* Global Toast Notification */}
-      {toastMsg && <div className="portal-toast">{toastMsg}</div>}
+            <div className="portal-body">
+              <Sidebar role={role} />
 
-      {/* Modals Container */}
-      {grantModalItem && (
-        <GrantApprovalModal
-          grantItem={grantModalItem}
-          onClose={() => setGrantModalItem(null)}
-          onConfirm={handleConfirmGrant}
-        />
-      )}
+              <main className="portal-main">
+                <Routes>
+                  {/* Admin Routes */}
+                  <Route path="/admin/dashboard" element={<AdminDashboard gaushalas={gaushalas} alerts={alerts} onOpenAuditModal={setAuditModalData} onOpenGrantModal={setGrantModalItem} onNavigateTab={(p) => navigate('/admin/' + p)} />} />
+                  <Route path="/admin/grants" element={<AdminGrants grants={grants} onOpenGrantModal={setGrantModalItem} onRejectGrant={handleRejectGrant} />} />
+                  <Route path="/admin/audit" element={<AdminAudit gaushalas={gaushalas} onOpenAuditModal={setAuditModalData} />} />
+                  <Route path="/admin/sub-admins" element={<AdminSubAdmins subAdmins={subAdmins} onOpenAddModal={() => setAddSubAdminModalOpen(true)} />} />
+                  <Route path="/admin/policy" element={<AdminPolicy onShowToast={showToast} />} />
+                  <Route path="/admin/public" element={<AdminPublic onOpenPhotoModal={setPhotoProofData} onShowToast={showToast} />} />
+                  <Route path="/admin/ai-features" element={<AdvancedFeatures onShowToast={showToast} />} />
 
-      {photoProofData && (
-        <PhotoProofModal
-          proofData={photoProofData}
-          onClose={() => setPhotoProofData(null)}
-        />
-      )}
+                  {/* Sub-Admin Routes */}
+                  <Route path="/sub/zone" element={<SubZoneMonitor gaushalas={gaushalas} onOpenPhotoModal={setPhotoProofData} onShowToast={showToast} />} />
+                  <Route path="/sub/alerts" element={<SubAlerts alerts={alerts} onShowToast={showToast} onUpdateAlertStatus={(id, status, action) => setAlerts(prev => prev.map(a => a.id === id ? { ...a, status, actionTaken: action } : a))} />} />
+                  <Route path="/sub/verify" element={<SubVerification gaushalas={gaushalas} onOpenPhotoModal={setPhotoProofData} onShowToast={showToast} />} />
+                  <Route path="/sub/reports" element={<SubZoneReports onShowToast={showToast} />} />
 
-      {auditModalData && (
-        <AuditReportModal
-          auditData={auditModalData}
-          onClose={() => setAuditModalData(null)}
-        />
-      )}
+                  {/* Manager Routes */}
+                  <Route path="/manager/dashboard" element={<ManagerDashboard alerts={alerts} stock={stock} onNavigateTab={(p) => navigate('/manager/' + p)} onOpenAddCowModal={() => setAddCowModalOpen(true)} />} />
+                  <Route path="/manager/cctv" element={<ManagerCCTV onOpenPhotoModal={setPhotoProofData} onShowToast={showToast} />} />
+                  <Route path="/manager/gate" element={<ManagerGateRFID onOpenPhotoModal={setPhotoProofData} onShowToast={showToast} />} />
+                  <Route path="/manager/feed" element={<ManagerFeedStock stock={stock} onDeductStock={handleDeductStock} onAddStock={handleAddStock} onShowToast={showToast} />} />
+                  <Route path="/manager/health" element={<ManagerHealth healthRecords={healthRecords} onOpenAddHealthModal={() => setAddHealthModalOpen(true)} />} />
+                  <Route path="/manager/perimeter" element={<ManagerPerimeter onShowToast={showToast} />} />
 
-      {addHealthModalOpen && (
-        <AddHealthModal
-          onClose={() => setAddHealthModalOpen(false)}
-          onAddRecord={(rec) => {
-            setHealthRecords((prev) => [rec, ...prev]);
-            showToast(
-              isHi
-                ? `✓ नया स्वास्थ्य रिकॉर्ड दर्ज: ${rec.cowName} (${rec.tag})`
-                : `✓ New veterinary record logged: ${rec.cowName} (${rec.tag})`
-            );
-          }}
-        />
-      )}
+                  <Route path="*" element={<Navigate to={role === 'admin' ? '/admin/dashboard' : (role === 'sub' ? '/sub/zone' : '/manager/dashboard')} replace />} />
+                </Routes>
+              </main>
+            </div>
 
-      {addSubAdminModalOpen && (
-        <AddSubAdminModal
-          onClose={() => setAddSubAdminModalOpen(false)}
-          onAddOfficer={(officer) => {
-            setSubAdmins((prev) => [...prev, officer]);
-            showToast(
-              isHi
-                ? `✓ नया उप-प्रशासक असाइन किया गया: ${officer.name} (${officer.zone})`
-                : `✓ New Sub-Admin assigned: ${officer.name} (${officer.zone})`
-            );
-          }}
-        />
-      )}
+            {/* Global Toast Notification */}
+            {toastMsg && <div className="portal-toast">{toastMsg}</div>}
 
-      {addCowModalOpen && (
-        <AddCowModal
-          onClose={() => setAddCowModalOpen(false)}
-          onAddCow={(cow) => {
-            // Updating the first gaushala's count to simulate system update
-            setGaushalas(prev => prev.map((g, i) => i === 0 ? { ...g, reg: g.reg + 1, ver: g.ver + 1 } : g));
-            showToast(
-              isHi
-                ? `✓ नया गोवंश (${cow.tag}) गौशाला में सफलतापूर्वक पंजीकृत किया गया। सिस्टम अपडेटेड!`
-                : `✓ New cattle (${cow.tag}) registered successfully in shelter. System updated!`
-            );
-          }}
-        />
-      )}
-    </div>
+            {/* Modals Container */}
+            {grantModalItem && <GrantApprovalModal grantItem={grantModalItem} onClose={() => setGrantModalItem(null)} onConfirm={handleConfirmGrant} />}
+            {photoProofData && <PhotoProofModal proofData={photoProofData} onClose={() => setPhotoProofData(null)} />}
+            {auditModalData && <AuditReportModal auditData={auditModalData} onClose={() => setAuditModalData(null)} />}
+            {addHealthModalOpen && <AddHealthModal onClose={() => setAddHealthModalOpen(false)} onAddRecord={(rec) => { setHealthRecords(prev => [rec, ...prev]); showToast(isHi ? `✓ नया स्वास्थ्य रिकॉर्ड दर्ज: ${rec.cowName} (${rec.tag})` : `✓ New veterinary record logged: ${rec.cowName} (${rec.tag})`); }} />}
+            {addSubAdminModalOpen && <AddSubAdminModal onClose={() => setAddSubAdminModalOpen(false)} onAddOfficer={(officer) => { setSubAdmins(prev => [...prev, officer]); showToast(isHi ? `✓ नया उप-प्रशासक असाइन किया गया: ${officer.name} (${officer.zone})` : `✓ New Sub-Admin assigned: ${officer.name} (${officer.zone})`); }} />}
+            {addCowModalOpen && <AddCowModal onClose={() => setAddCowModalOpen(false)} onAddCow={(cow) => { setGaushalas(prev => prev.map((g, i) => i === 0 ? { ...g, reg: g.reg + 1, ver: g.ver + 1 } : g)); showToast(isHi ? `✓ नया गोवंश (${cow.tag}) गौशाला में सफलतापूर्वक पंजीकृत किया गया।` : `✓ New cattle (${cow.tag}) registered successfully in shelter.`); }} />}
+          </div>
+        )
+      } />
+    </Routes>
   );
 }
