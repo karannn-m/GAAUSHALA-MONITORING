@@ -96,8 +96,8 @@ export default function AdvancedFeatures({ onShowToast }) {
           <h3 className="flex items-center gap-2 text-lg font-bold mb-4">
             <Satellite className="text-emerald-500" /> {tTitles.drone}
           </h3>
-          <div className="h-24 bg-green-50 border-2 border-dashed border-green-200 rounded-lg flex items-center justify-center text-sm text-green-600">
-            {isHi ? '[सैटेलाइट मैप लोड हो रहा है...]' : '[Loading Satellite Map...]'}
+          <div className="h-40 bg-green-50 border-2 border-dashed border-green-200 rounded-lg flex items-center justify-center overflow-hidden">
+            <img src="/drone_pasture_map.jpg" alt="Drone Pasture Map" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
           <p className="text-xs text-gray-500 mt-2">
             {isHi ? 'चारागाह की हरियाली (NDVI) इंडेक्स: 0.65' : 'Pasture Greenness (NDVI) Index: 0.65'}

@@ -42,13 +42,13 @@ export default function LiveCameraFeed({
     }
     switch (bgType) {
       case 'trough':
-        return 'linear-gradient(180deg, #475569 0%, #334155 40%, #1e293b 100%)';
+        return `url('/cctv_ai_feed.jpg') center/cover no-repeat, linear-gradient(180deg, #475569 0%, #334155 40%, #1e293b 100%)`;
       case 'pasture':
-        return 'linear-gradient(180deg, #334155 0%, #1e3a1f 35%, #14532d 100%)';
+        return `url('/cctv_ai_feed.jpg') center/cover no-repeat, linear-gradient(180deg, #334155 0%, #1e3a1f 35%, #14532d 100%)`;
       case 'night':
-        return 'linear-gradient(180deg, #090d16 0%, #0f172a 100%)';
+        return `url('/cctv_ai_feed.jpg') center/cover no-repeat, linear-gradient(180deg, #090d16 0%, #0f172a 100%)`;
       default:
-        return 'linear-gradient(180deg, #334155 0%, #475569 45%, #1e293b 100%)';
+        return `url('/cctv_ai_feed.jpg') center/cover no-repeat, linear-gradient(180deg, #334155 0%, #475569 45%, #1e293b 100%)`;
     }
   };
 
@@ -121,27 +121,12 @@ export default function LiveCameraFeed({
           </div>
         </div>
 
-        {/* Animated Visual Elements (Cattle silhouettes / environment simulation) */}
-        <svg
-          viewBox="0 0 320 200"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            opacity: isIrMode ? 0.45 : 0.65
-          }}
-        >
-          {/* Shed Posts & Roof Beams */}
-          <line x1="20" y1="10" x2="20" y2="190" stroke="#64748b" strokeWidth="3" />
-          <line x1="160" y1="10" x2="160" y2="190" stroke="#64748b" strokeWidth="2.5" />
-          <line x1="300" y1="10" x2="300" y2="190" stroke="#64748b" strokeWidth="3" />
-          <line x1="0" y1="40" x2="320" y2="40" stroke="#475569" strokeWidth="3" />
-          
-          {/* Floor & Feed Area */}
-          <polygon points="0,130 320,130 320,200 0,200" fill="#1e293b" opacity="0.6" />
-          <line x1="0" y1="130" x2="320" y2="130" stroke="#f59e0b" strokeWidth="1" strokeDasharray="4 4" />
-        </svg>
+        {/* Animated Visual Elements */}
+        {/* Removed vector shapes because we are using a real CCTV image now */}
+        <div style={{ position: 'absolute', inset: 0, opacity: isIrMode ? 0.45 : 0.65 }}>
+          {/* Overlay to dim the image slightly if needed */}
+          <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.2)' }} />
+        </div>
 
         {/* Dynamic AI Detection Bounding Boxes */}
         {boxes.map((b, i) => (

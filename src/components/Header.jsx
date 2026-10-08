@@ -39,9 +39,7 @@ export default function Header({
       <header className="portal-header">
         {/* Brand identity */}
         <div className="brand-section">
-          <div className="ashoka-emblem" title="छत्तीसगढ़ शासन / Government of India">
-            🏛️
-          </div>
+          <img src="/cg_gov_logo.jpg" alt="Gov Logo" className="w-10 h-10 object-contain rounded-full shadow-sm" />
           <div className="brand-titles">
             <h1>
               <span>AI Gaushala Portal</span>
