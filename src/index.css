@@ -336,6 +336,10 @@ body {
   flex-shrink: 0;
   transition: width 0.25s ease;
   z-index: 20;
+  position: sticky;
+  top: 68px;
+  height: calc(100vh - 68px);
+  overflow-y: auto;
 }
 
 .user-identity-card {

@@ -54,9 +54,6 @@ export default function AdminDashboard({
           <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.45rem', fontWeight: 700, margin: '6px 0 2px' }}>
             {isHi ? 'आज का राज्य स्तरीय गो-संरक्षण अनुपालन:' : 'Today\'s State-level Protection Compliance:'} <span style={{ color: '#4ade80' }}>94.1%</span>
           </div>
-          <p style={{ fontSize: '0.8rem', opacity: 0.85, margin: 0 }}>
-            {isHi ? 'Edge-AI CCTV + UHF RFID स्वचालित हेडकाउंट द्वारा दैनिक सत्यापन सक्रिय' : 'Daily verification active via Edge-AI CCTV + UHF RFID Automated Headcount'}
-          </p>
         </div>
         <div style={{ textAlign: 'right', background: 'rgba(0,0,0,0.25)', padding: '10px 16px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.1)' }}>
           <div style={{ fontSize: '0.72rem', color: '#cbd5e1' }}>{isHi ? 'सत्यापित देय अनुदान (दैनिक हेडकाउंट आधार)' : 'Verified Payable Grant (Daily Headcount Basis)'}</div>

@@ -103,16 +103,6 @@ export default function Sidebar({ role }) {
         })}
       </nav>
 
-      {/* Sidebar Footer AI Engine Status */}
-      <div className="sidebar-footer">
-        <div className="ai-engine-pill">
-          <Cpu size={14} />
-          <span>YOLOv8 + RFID Online</span>
-        </div>
-        <div style={{ opacity: 0.8 }}>
-          Edge Nodes: <b>48 Active</b> • Sync: <b>Real-time</b>
-        </div>
-      </div>
     </aside>
   );
 }

@@ -60,9 +60,6 @@ export default function LiveCameraFeed({
         <h3 style={{ fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Camera size={16} color="var(--saffron)" />
           {title}
-          <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded-full border border-yellow-300">
-            {isHi ? 'सिमुलेशन / मॉक' : 'Mock Mode'}
-          </span>
         </h3>
         <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
           <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
@@ -116,9 +113,7 @@ export default function LiveCameraFeed({
         {/* Top HUD */}
         <div className="cam-hud-header">
           <div className="cam-title-tag">
-            <span>● 1080p 24FPS</span>
-            <span style={{ margin: '0 4px' }}>|</span>
-            <span>Edge-YOLO AI</span>
+            <span>LIVE</span>
           </div>
           <div className="cam-rec-indicator">
             <span className="pulsing-dot" style={{ background: '#ef4444' }} />

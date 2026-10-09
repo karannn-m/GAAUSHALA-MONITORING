@@ -40,9 +40,6 @@ export default function GISMap({ gaushalas, selectedId, onSelectGaushala }) {
             </button>
           ))}
         </div>
-        <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
-          {isHi ? '* बिंदु पर क्लिक करके लाइव डेटा देखें' : '* Click pin to inspect live telemetry'}
-        </span>
       </div>
 
       {/* SVG GIS Canvas */}

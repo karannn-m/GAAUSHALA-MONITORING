@@ -31,12 +31,12 @@ export default function ManagerCCTV({ onOpenPhotoModal, onShowToast }) {
       <div className="page-header-banner">
         <div>
           <h2 className="page-title">
-            {isHi ? 'CCTV · Edge-AI डिटेक्शन नेटवर्क (Real-Time Vision)' : 'CCTV · Edge-AI Detection Network (Vision AI)'}
+            {isHi ? 'CCTV लाइव फ़ीड (Live Feed)' : 'CCTV Live Feed'}
           </h2>
           <p className="page-desc">
             {isHi
-              ? 'कम लागत Edge-AI (YOLOv8 + OpenCV) — मौजूदा गौशाला कैमरों पर स्वतः गणना एवं व्यवहार पहचान'
-              : 'Low-cost Edge-AI (YOLOv8 + OpenCV) — automated headcount & behavioral detection on existing CCTV'}
+              ? 'गौशाला कैमरों पर स्वतः गणना एवं व्यवहार पहचान'
+              : 'Automated headcount & behavioral detection on CCTV'}
           </p>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
@@ -61,12 +61,12 @@ export default function ManagerCCTV({ onOpenPhotoModal, onShowToast }) {
         </div>
       </div>
 
-      {/* Edge-AI Performance KPIs */}
+      {/* System Performance KPIs */}
       <div className="kpi-grid">
         <KpiCard
-          title={isHi ? "Edge-AI इन्फरेंस स्पीड" : "Edge-AI Inference Speed"}
+          title={isHi ? "सिस्टम स्पीड" : "System Speed"}
           value="24 FPS"
-          change="Real-time GPU/NPU"
+          change="Real-time"
           tone="emerald"
           icon="⚡"
         />
