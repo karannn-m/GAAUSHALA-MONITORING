@@ -31,11 +31,6 @@ export default function SubZoneMonitor({ gaushalas, onOpenPhotoModal, onShowToas
           <h2 className="page-title">
             {isHi ? 'ज़ोन लाइव मॉनिटर – रायपुर संभाग (Zone Command)' : 'Zone Live Monitor – Raipur Division (Command)'}
           </h2>
-          <p className="page-desc">
-            {isHi
-              ? 'रायपुर ज़ोन की सभी गौशालाओं के सीसीटीवी, एआई डिटेक्शन एवं स्वचालित हेडकाउंट'
-              : 'Real-time CCTV feeds, AI detection & automated headcount across Raipur Zone'}
-          </p>
         </div>
         <button
           className={`btn-gov ${isIrMode ? 'emerald' : 'outline'}`}

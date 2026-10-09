@@ -32,7 +32,6 @@ export default function AdminDashboard({
       <div className="page-header-banner">
         <div>
           <h2 className="page-title">{isHi ? 'राज्य स्तरीय निगरानी डैशबोर्ड (State Command Center)' : 'State Level Command Center'}</h2>
-          <p className="page-desc">{isHi ? 'पूरे राज्य की गौशालाओं की वास्तविक समय (GIS Map) AI + RFID निगरानी' : 'Real-time AI + RFID monitoring of Gaushalas across the state via GIS'}</p>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <button className="btn-gov saffron" onClick={() => onNavigateTab('grants')}>

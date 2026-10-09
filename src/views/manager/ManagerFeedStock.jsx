@@ -62,11 +62,6 @@ export default function ManagerFeedStock({
           <h2 className="page-title">
             {isHi ? 'चारा एवं डिजिटल स्टॉक प्रबंधन (Ration & Weighbridge)' : 'Fodder & Digital Stock Management'}
           </h2>
-          <p className="page-desc">
-            {isHi
-              ? 'AI सत्यापित गोवंश संख्या से जुड़ी पारदर्शी राशन व्यवस्था + धर्मकाँटा एवं ANPR वाहन मिलान'
-              : 'Transparent ration system linked to AI verified cattle count + Smart Weighbridge & ANPR verification'}
-          </p>
         </div>
       </div>
 

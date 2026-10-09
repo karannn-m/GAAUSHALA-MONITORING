@@ -13,11 +13,6 @@ export default function ManagerGateRFID({ onOpenPhotoModal, onShowToast }) {
           <h2 className="page-title">
             {isHi ? 'RFID गेट एवं झुंड ट्रैकिंग (Gate & Herd Tracking)' : 'RFID Gate & Herd Tracking'}
           </h2>
-          <p className="page-desc">
-            {isHi
-              ? 'Passive UHF RFID इयर-टैग + लॉन्ग-रेंज गेट रीडर + LoRaWAN झुंड ट्रैकिंग नेटवर्क'
-              : 'Passive UHF RFID Ear-Tags + Long-Range Gate Reader + LoRaWAN Herd Tracking'}
-          </p>
         </div>
       </div>
 
