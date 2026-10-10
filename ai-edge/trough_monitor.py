@@ -23,9 +23,10 @@ def check_fodder_status(frame):
         for box in boxes:
             cls_id = int(box.cls[0])
             class_name = model.names[cls_id]
-            # Assuming model is trained to detect 'fodder' or 'hay'
-            # For boilerplate, let's assume class 'potted plant' (index 58) as mock for fodder
-            if class_name in ['potted plant', 'fodder', 'hay']:
+            # TODO: Replace with custom trained model for "fodder" and "empty_trough"
+            # For demonstration purposes, if using standard COCO model, mapping 'potted plant' (index 58)
+            # or 'backpack' (index 24) to mock fodder detection.
+            if class_name in ['potted plant', 'backpack', 'fodder', 'hay']:
                 fodder_detected = True
                 break
     return fodder_detected

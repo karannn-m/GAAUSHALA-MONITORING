@@ -100,6 +100,102 @@ fastify.get('/api/manager/dashboard', { preHandler: [fastify.authenticate, requi
   return { gaushala: rows[0], total_cattle: cattle.rows[0].total_cattle };
 });
 
+// --- NEW DATA APIs for Frontend ---
+
+// Get all Gaushalas
+fastify.get('/api/gaushalas', async (request, reply) => {
+  try {
+    const { rows } = await pool.query('SELECT * FROM gaushalas');
+    // Map db columns to frontend expected format
+    const formatted = rows.map(r => ({
+      id: r.code,
+      name: r.name,
+      district: r.district,
+      zone: r.zone,
+      reg: r.reg,
+      ver: r.ver,
+      status: r.status,
+      feedStatus: r.feed_status,
+      manager: r.manager,
+      contact: r.contact,
+      cctvCount: r.cctv_count,
+      rfidCoverage: r.rfid_coverage,
+      lastAuditScore: r.last_audit_score,
+      address: r.address,
+      bankDetails: r.bank_details,
+      grantClaimed: parseFloat(r.grant_claimed),
+      grantApproved: parseFloat(r.grant_approved),
+      cattleDistribution: r.cattle_distribution
+    }));
+    return { data: formatted };
+  } catch (err) {
+    return reply.code(500).send({ error: 'Database connection failed' });
+  }
+});
+
+// Get all Alerts
+fastify.get('/api/alerts', async (request, reply) => {
+  try {
+    const { rows } = await pool.query('SELECT * FROM alerts ORDER BY created_at DESC');
+    const formatted = rows.map(r => ({
+      id: r.alert_code,
+      type: r.type,
+      category: r.category,
+      title: r.title,
+      titleHi: r.title_hi,
+      titleEn: r.title_en,
+      desc: r.description,
+      descHi: r.desc_hi,
+      descEn: r.desc_en,
+      status: r.status,
+      actionTaken: r.action_taken
+    }));
+    return { data: formatted };
+  } catch(err) {
+    return { data: [] };
+  }
+});
+
+// Get all Sub Admins
+fastify.get('/api/sub-admins', async (request, reply) => {
+  try {
+    const { rows } = await pool.query("SELECT * FROM users WHERE role='SUB_ADMIN'");
+    const formatted = rows.map(r => ({
+      id: r.username,
+      name: r.name,
+      title: r.title,
+      zone: r.zone,
+      phone: r.phone
+    }));
+    return { data: formatted };
+  } catch(err) {
+    return { data: [] };
+  }
+});
+
+// Get Health Records
+fastify.get('/api/health-records', async (request, reply) => {
+  try {
+    const { rows } = await pool.query('SELECT * FROM health_records ORDER BY date DESC');
+    return { data: rows };
+  } catch(err) {
+    return { data: [] };
+  }
+});
+
+// Get Stock
+fastify.get('/api/stock', async (request, reply) => {
+  try {
+    const { rows } = await pool.query('SELECT SUM(hara_kg) as hara, SUM(sukha_kg) as sukha, SUM(dana_kg) as dana FROM feed_stock');
+    if (rows[0] && rows[0].hara !== null) {
+      return { data: { hara: parseFloat(rows[0].hara), sukha: parseFloat(rows[0].sukha), dana: parseFloat(rows[0].dana) } };
+    }
+    return { data: { hara: 4200, sukha: 1500, dana: 380 } }; // fallback if table is empty
+  } catch(err) {
+    return { data: { hara: 4200, sukha: 1500, dana: 380 } };
+  }
+});
+
 // 4. Admin: Approve Grant (With Audit Trail)
 fastify.post('/api/admin/grants/approve', { preHandler: [fastify.authenticate, requireRole(['ADMIN'])] }, async (request, reply) => {
   const { grant_id, transaction_id } = request.body;
